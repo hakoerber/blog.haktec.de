@@ -5,6 +5,20 @@ pipeline:
       TARGET: production
     commands:
       - make build
+    when:
+      branch:
+        include: "*"
+        exclude: staging
+
+  build_staging:
+    image: registry.haktec.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
+    environment:
+      TARGET: staging
+    commands:
+      - make build
+    when:
+      branch:
+        - staging
 
   package:
     image: registry.haktec.de/docker:2bf92189803126ca18eb9dc75ae689ffc6319ffa
@@ -17,7 +31,6 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
 
   deploy:
-    # image: alpine:latest
     image: quay.io/honestbee/drone-kubernetes:master
     deployment: de-haktec-blog-staging
     kubernetes_server: ${KUBERNETES_SERVER}
@@ -27,9 +40,6 @@ pipeline:
     container: blog
     tag: ${DRONE_COMMIT_SHA}
     namespace: default
-    # commands:
-    #     - echo
-    #   - make push
     when:
       branch:
         - staging
