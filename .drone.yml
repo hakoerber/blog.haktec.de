@@ -5,6 +5,7 @@ pipeline:
       TARGET: production
     commands:
       - make build
+
   package:
     image: registry.haktec.de/docker:2bf92189803126ca18eb9dc75ae689ffc6319ffa
     environment:
@@ -14,3 +15,25 @@ pipeline:
       - make push
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  deploy:
+    # image: alpine:latest
+    image: quay.io/honestbee/drone-kubernetes:master
+    deployment: de-haktec-blog-staging
+    kubernetes_server: ${KUBERNETES_SERVER}
+    # kubernetes_cert: ${KUBERNETES_CERT}
+    kubernetes_token: ${KUBERNETES_TOKEN}
+    repo: registry.haktec.de/blog
+    container: blog
+    tag: ${DRONE_COMMIT_SHA}
+    namespace: default
+    # commands:
+    #     - echo
+    #   - make push
+    when:
+      branch:
+        - staging
+    secrets:
+      - KUBERNETES_SERVER
+      # - KUBERNETES_CERT
+      - KUBERNETES_TOKEN
