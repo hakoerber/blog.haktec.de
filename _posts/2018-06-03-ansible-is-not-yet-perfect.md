@@ -1,17 +1,29 @@
 ---
-title: "Ansible in Production: A review"
-date: 2017-12-22 09:58:25+02:00
+title: "Ansible Is Not (Yet) Perfect"
+date: 2018-06-03T13:21:23+02:00
 tags: ansible puppet config
-excerpt: The good, the bad and the ugly
+excerpt: A Review of Ansible in Production
 ---
 
 {% include toc %}
 
 # Introduction
 
-## YAML
+I have been using Ansible for over a year now, both at work and at home (for example to configure my Kubernetes cluster using [kubespray](https://github.com/kubernetes-incubator/kubespray).
 
-YAML is very good to express data, similar to JSON. You have dictionaries, lists, scalars, combinations of them and some syntactic sugar to save typing. Easy.
+When I first used Ansible, I was blown away by its power and simplicity. And all that by leveraging the existing SSH server, without a new client setup? Awesome!
+
+But over time, I discovered more and more warts and limitations while using Ansible. In this blog post, I will go over all the cases where Ansible falls short of the promises it make and where you start fighting *against* Ansilbe instead of *together with* Ansible.
+
+This post is in no way meant to put down Ansible. When focusing on the bad parts, one might get the impression that there are no good parts. For Ansible, this is absolutely not the case! But by listing its drawbacks, maybe we can come up with ideas how to fix or work around those, benefitting everyone.
+
+This post assumes some familiarity with Ansible. I can recommend the [Getting Started Documentation](http://docs.ansible.com/ansible/latest/user_guide/index.html) for the first steps with Ansilbe.
+
+# Ansible limitations
+
+## YAML as the configuration language
+
+Ansible uses [YAML](http://yaml.org/) for almost all of its configuration. YAML is an excellent choice when you want to express data, similar to JSON. You have dictionaries, lists, scalars, combinations of them and some syntactic sugar to save typing. Easy.
 
 But YAML is not a good language to express program logic.
 
@@ -38,10 +50,10 @@ Easy to reason about: This outputs ``one`` ``two`` ``three``. Now, Ansible has a
     - three
 ```
 
-If you know ansible, you most likely know what is going to happen: If will output `one` and `three`, skipping `two`. This is of course the only way the ordering between `when` and `with_items` makes sense, but this is not at all obvious or deducible by only looking at the code. If this was instead done procedurally, it is immediately obvious:
+If you know Ansible, you most likely know what is going to happen: If will output `one` and `three`, skipping `two`. This is of course the only way the ordering between `when` and `with_items` makes sense, but this is not at all obvious or deducible by only looking at the code. If this was instead done procedurally, it is immediately obvious:
 
 ```python
-for item in ('one', 'two', 'three') {
+for item in ['one', 'two', 'three'] {
     if item != 'two' {
         shell('echo {item}')
     }
@@ -63,7 +75,7 @@ But when using a loop, the structure of `out` differs from one you would get wit
 
 My guess is that YAML was chosen because it is declarative. But Ansible is inherently non-declarative, but rather procedular, at least on a high level.
 
-On the module level declarativeness makes a lot of sense. I do not actually care how that file gets its content and permissions, or how that package is installed. I just want to tell ansible to make it so, and its job is to figure it out. So, YAML might actually be a good decision for module invokation:
+On the module level declarativeness makes a lot of sense. I do not actually care how that file gets its content and permissions, or how that package is installed. I just want to tell Ansible to make it so, and its job is to figure it out. So, YAML might actually be a good decision for module invokation:
 
 ```
 - copy:
@@ -80,7 +92,7 @@ There is another configuration management system that uses YAML together with Ji
 
 This approach makes for a much more powerful syntax, because you actually have a turing complete language (Jinja) to write your declarations (YAML). It's also less magic: If you know Jinja well enough, it's easy to reason about the code without knowing SaltStack internals.
 
-The problem: You can shoot yourself in the foot, and SaltStack placed your target right next to your foot. There is a very thin line between "That makes sense!" and "This is messy!". Take the following code as an example, taken from my salt forumla to set up Nginx together with LetsEncrypt (link [here](https://github.com/hakoerber/salt-nginx-letsencrypt)):
+The problem: You can shoot yourself in the foot, and SaltStack placed your target right next to your foot. There is a thin line between "That makes sense!" and "This is messy!". Take the following code as an example, taken from my salt forumla to set up Nginx together with LetsEncrypt (link [here](https://github.com/hakoerber/salt-nginx-letsencrypt)):
 
 {% raw %}
 ```jinja
@@ -125,21 +137,21 @@ Whatever it does, I think we can agree that this is not nice to read.
 
 In the end, I think that YAML is simply not a good abstraction for configuration management files, and using Jinja as a crutch to get more functionality out of a data description language makes it even worse.
 
-Configuration management needs a touring complete language with a declarative way to use modules. From this, you can generate a declaration of your desired configuration, that can then be used to configure your system. Complete declarativeness for the language, even though it is often touted as the end goal of CMSs, is not possible. Even the puppet DSL has loops and conditions.
+Configuration management needs a touring complete language with a declarative way to use modules. From this, you can generate a declaration of your desired configuration, that can then be used to configure your system. Complete declarativeness for the language, even though it is often touted as the end goal of CMSs, is not possible. Even the Puppet DSL has loops and conditions.
 
-In a way, a strictly function language might be the best way to go. [NixOS](https://nixos.org/) is a very promising candidate.
+In a way, a strictly functional language might be the best way to go. [NixOS](https://nixos.org/) is a really promising and interesting candidate.
 
 ## Release engineering
 
-Ansible moves very fast and breaks lots of things. This is simply not a good feature for a configuration management system.
+Ansible moves fast and breaks lots of things. This is simply not a good feature for a configuration management system.
 
 For the ``package`` module, ``state: installed`` is now called ``state: present``
 
 One bug that let to a lot of frustration for me and my team was a ``RecursionError`` caused by too many (>20) ``import_role`` statements in a playbook. It was introduced around version 2.0, fixed in version 2.3, resurfaced in version 2.4, and finally fixed for good (hopefully) in version 2.5.
 
-TODO I do not want to change little things in my roles every few releases.
+This does not give me a lot of confidence in the Ansible release engineering. I know that it is a very hard job, and you always have to weigh stability against new features. But it is my impression that the Ansible team leans a bit too much on the latter side, introducting breakage and forcing me to adapt my roles and modules every few releases.
 
-## Inventory
+## Inventory and Host Variables
 
 Ansible has a concept of host and group specific variables. There are a lot of places where you can set variables, and their precedence is strictly defined (look at the list in the [official documentation](http://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable)!).
 
@@ -162,7 +174,7 @@ admins:
   - name: ...
 ```
 
-Now, you want to add a new employee to your list of users, but only for a few servers (you do not want the new guys to break production!). In a perfect world, you would go to the ``group_vars`` of those servers, and add the new guy:
+Now, you want to add a new guy to your list of users, but only for a few servers (you do not want the new guys to break production!). In a perfect world, you would go to the ``group_vars`` of those servers, and add the new guy:
 
 ```
 admins:
@@ -201,15 +213,21 @@ Simply put, the execution speed of Ansible playbooks is horrendous. This is due 
 
 When running Ansible playbooks, you can pass `--dry-run` to the `ansible-playbook` command, and Ansible will show you what would be done, not actually executing anything.
 
-Except that this does not work. This happens most often when you add a YUM/APT repository, to the install a package from that repository. If the
+Except that this does not work reliably. This happens most often when you add a YUM/APT repository, to the install a package from that repository. If the repository is not yet present on the server, the (no-op) package installation will fail with a "package not found" error.
+
+There are workarounds, like using ``when: not ansible_check_mode``, but these are still just that: workarounds.
+
+Ansible does not give me the same sense of reliability as e.g. puppet does.
 
 # Personal opinion
 
-It might sound weird after the above but I have to say: I really like Ansible. Not so much for configuration, but for orchestration. There is simply nothing better (but that does not imply that Ansible is good!).
+It might sound weird after the above but I have to say: I really like Ansible. Not so much for configuration, but for orchestration. There is simply nothing better.
 
-I love having repetitive tasks written down as code, having them reviewed before running them. Documentation having copy-paste shell snippets now simply link to an ansible script that does the same, but repeatably, and without accidentially pasting into the wrong terminal window ;)
+I love having repetitive tasks written down as code, having them reviewed before running them. Documentation having copy-paste shell snippets now simply link to an Ansible script that does the same, but repeatably, and without accidentially pasting into the wrong terminal window ;)
 
 Slap something like [Rundeck](https://www.rundeck.com/open-source) or [StackStorm](https://stackstorm.com/) in front of Ansible, and you can give fine-grained access to your playbooks to other people, together with logging, auditing, and integration to you favourite tools (Jira \*cough\*)
+
+But, Ansible as configuration management tool has not convinced me yet. As old school as it is, Puppet gives me more confidence while using it. Ansible still has a lot to do in that regard, but with lots and lots of people working on Ansible, together with being backed by RedHat, I hope it will get even better in the future!
 
 <!--
 ---
