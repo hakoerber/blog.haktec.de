@@ -164,7 +164,7 @@ postgresql_data_checksums: false
 postgresql_pwfile: ""
 ```
 
-This is simply ugly, and now the way YAML is meant to be used. Also, assume you have the following situation: You have a number of servers, and a number of admins that have access to the server, like this:
+This is simply ugly, and not the way YAML is meant to be used. Also, assume you have the following situation: You have a number of servers, and a number of admins that have access to the server, like this:
 
 ```
 admins:
@@ -225,7 +225,7 @@ It might sound weird after the above but I have to say: I really like Ansible. N
 
 I love having repetitive tasks written down as code, having them reviewed before running them. Documentation having copy-paste shell snippets now simply link to an Ansible script that does the same, but repeatably, and without accidentially pasting into the wrong terminal window ;)
 
-Slap something like [Rundeck](https://www.rundeck.com/open-source) or [StackStorm](https://stackstorm.com/) in front of Ansible, and you can give fine-grained access to your playbooks to other people, together with logging, auditing, and integration to you favourite tools (Jira \*cough\*)
+Slap something like [Rundeck](https://www.rundeck.com/open-source) or [StackStorm](https://stackstorm.com/) in front of Ansible, and you can give fine-grained access to your playbooks to other people, together with logging, auditing, and integration for your favourite tools.
 
 But, Ansible as configuration management tool has not convinced me yet. As old school as it is, Puppet gives me more confidence while using it. Ansible still has a lot to do in that regard, but with lots and lots of people working on Ansible, together with being backed by RedHat, I hope it will get even better in the future!
 
