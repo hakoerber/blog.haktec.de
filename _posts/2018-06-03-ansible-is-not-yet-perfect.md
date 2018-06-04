@@ -13,9 +13,9 @@ I have been using Ansible for over a year now, both at work and at home (for exa
 
 When I first used Ansible, I was blown away by its power and simplicity. And all that by leveraging the existing SSH server, without a new client setup? Awesome!
 
-But over time, I discovered more and more warts and limitations while using Ansible. In this blog post, I will go over all the cases where Ansible falls short of the promises it make and where you start fighting *against* Ansilbe instead of *together with* Ansible.
+But over time, I discovered more and more warts and limitations while using Ansible. In this blog post, I will go over all the cases where it falls short of the promises it make and where you start fighting *against* Ansilbe instead of *together with* Ansible.
 
-This post is in no way meant to put down Ansible. When focusing on the bad parts, one might get the impression that there are no good parts. For Ansible, this is absolutely not the case! But by listing its drawbacks, maybe we can come up with ideas how to fix or work around those, benefitting everyone.
+This post is in no way meant to put down Ansible. When focusing on the bad parts, one might get the impression that there are no good parts. This is absolutely not the case! But by listing its drawbacks, maybe we can come up with ideas how to fix or work around those, benefitting everyone.
 
 This post assumes some familiarity with Ansible. I can recommend the [Getting Started Documentation](http://docs.ansible.com/ansible/latest/user_guide/index.html) for the first steps with Ansilbe.
 
