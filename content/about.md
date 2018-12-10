@@ -6,7 +6,7 @@ type: static
 menu: main
 ---
 
-<img class="center" src="/assets/images/me.jpg" style="width:25%;">
+<img class="image-center" src="/assets/images/me.jpg">
 
 I'm Hannes Körber, currently working as a system operator at [Tradebyte Software GmbH](https://www.tradebyte.com/) in Ansbach, Germany.
 

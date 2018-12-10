@@ -1,3 +1,3 @@
 ---
+title: This is an overview over all posts
 ---
-This is an overview over all posts

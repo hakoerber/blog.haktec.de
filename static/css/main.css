@@ -21,17 +21,13 @@ body {
 }
 
 .navigation .list-horizontal-item {
-    margin-right: 20px;
-}
-
-.social .list-horizontal-item {
-    margin-right: 10px;
 }
 
 blockquote {
     border-left: black;
     border-left-style: solid;
     border-left-width: 2px;
+    font-style: oblique;
     padding-left: 10px;
     margin-left: 30px;
 }
@@ -72,7 +68,7 @@ pre {
     flex-wrap: wrap;
 }
 
-.header a:hover, .footer a:hover {
+.header a:hover, .footer a:hover, .tags a:hover {
     text-decoration: none;
     color: dimgray;
 }
@@ -82,13 +78,13 @@ ul {
 }
 
 .header a, .footer a, .tags a {
-    text-decoration: pone;
+    text-decoration: none;
     color: black
 }
 
 .tags ul {
-    list-style: none;
-    padding-left: 20px;
+    /* list-style: none; */
+    /* padding-left: 20px; */
 }
 
 .tags .list-bullet {
@@ -113,7 +109,31 @@ ul {
     /* border-style: solid; */
     /* border-width:  2px; */
     font-size: 20px;
-    margin-right: 30px;
+    margin-right: 20px;
+}
+
+.navigation li, .social {
+    /* background-color: red; */
+    border: silver;
+    border-style: solid;
+    background-color: silver;
+    padding: 5px;
+    border-width: 2px;
+    border-radius: 4px;
+}
+
+.navigation li:hover, .social li:hover {
+    /* background-color: red; */
+    /* opacity: 0.7; */
+    /* border-color: red; */
+}
+
+.navigation li:not(:last-child) {
+    margin-right: 20px;
+}
+
+.social .list-horizontal-item:not(:last-child) {
+    margin-right: 10px;
 }
 
 @media (max-width: 1000px) {
@@ -175,10 +195,19 @@ ul {
     margin-right: auto;
 }
 
+.title, .copyright {
+    margin-left: 15px;
+}
+
 main {
     width: 50%;
     text-align: justify;
     margin: auto;
+}
+
+.footnotes {
+    margin-top: 45px;
+    text-align: left;
 }
 
 h1, h2, h3, h4, h5 {
@@ -192,10 +221,16 @@ h1, h2, h3, h4, h5 {
     /* text-indent:0 20px; */
 }
 
+.content p:not(:last-child) {
+    margin-bottom: 25px;
+}
+
+
 .content p code {
     font-family: monospace;
     background-color: lightgray;
 }
+
 
 .content-prefix {
     text-align: center;
@@ -209,6 +244,10 @@ h1, h2, h3, h4, h5 {
     font-size: 0.85em;
 }
 
+.content {
+    margin-bottom: 45px;
+}
+
 .content-prefix,
 .content-postfix {
     /* border: green; */
@@ -218,9 +257,35 @@ h1, h2, h3, h4, h5 {
 }
 
 .related {
-    /* border: orange; */
-    /* border-style: solid; */
-    /* border-width: 2px; */
+    margin-top: 45px;
+}
+
+.image-center {
+    float: right;
+    margin-left: 40px;
+    margin-bottom: 40px;
+    width: 25%;
+}
+
+#toc {
+    /* padding: 10px; */
+    margin-left: 50px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    border: gray;
+    border-style: solid;
+    border-width: 1px;
+    text-align: initial;
+    width: 45%;
+    float: right;
+}
+
+#toc-heading {
+    text-align: center;
+}
+
+#TableOfContents ul {
+    /* background-color: red; */
 }
 
 .tags {
@@ -235,12 +300,6 @@ h1, h2, h3, h4, h5 {
     /* border-width: 2px; */
 }
 
-.list {
-    /* border: purple; */
-    /* border-style: solid; */
-    /* border-width: 2px; */
-}
-
 a:link {
     /* text-decoration: none; */
 }
@@ -249,4 +308,67 @@ a:link {
     text-decoration: none;
     background-color: lightgray;
     color: black;
+}
+
+.pagelist table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.pagelist th, td {
+    border-bottom: 1px solid #ddd;
+}
+
+.pagelist {
+    font-family: sans;
+}
+
+.pagelist .list-time {
+    font-family: monospace;
+}
+
+
+.pagelist tr:hover {
+    background-color: #f5f5f5;
+}
+
+.pagelist tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.pagelist th, td {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.pagelist a {
+    text-decoration: none;
+}
+
+.brown {
+    border: brown;
+    border-style: solid;
+    border-width: 2px;
+}
+.orange {
+    border: orange;
+    border-style: solid;
+    border-width: 2px;
+}
+.red {
+    border: red;
+    border-style: solid;
+    border-width: 2px;
+}
+.green {
+    border: green;
+    border-style: solid;
+    border-width: 2px;
+}
+.blue {
+    border: blue;
+    border-style: solid;
+    border-width: 2px;
 }

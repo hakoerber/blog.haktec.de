@@ -1,6 +1,7 @@
 {{ define "main" }}
   <article>
-    <h1>
+    <div class="content-prefix">
+    <h1 class="heading">
       {{- title .Title -}}
     </h1>
     {{- if .Params.toc -}}
@@ -11,7 +12,9 @@
     </aside>
     </div>
     {{- end -}}
-
+    </div>
+    <div class="content">
     {{- .Content -}}
+    </div>
   </article>
 {{ end }}

@@ -1,5 +1,11 @@
 {{ define "main" }}
-  {{- .Content -}}
+  <div class="content-prefix">
+  <h2 class="heading">
+    {{- title .Title -}}
+  </h1>
+  </div>
+  <div class="content">
+    {{- .Content -}}
+  </div>
   {{- partial "pagelist-default.html" . -}}
-  {{- partial "taglist.html" . -}}
 {{ end }}

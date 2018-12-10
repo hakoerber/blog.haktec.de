@@ -1,7 +1,6 @@
 {{ $related := .Site.RegularPages.Related . | first 3 }}
 
 {{ with $related }}
-<div class="related">
 <ul>
   {{ range . }}
   <li >
@@ -11,5 +10,4 @@
   </li>
   {{ end }}
 </ul>
-</div>
 {{ end }}

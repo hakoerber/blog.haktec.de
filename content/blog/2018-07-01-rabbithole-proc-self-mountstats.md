@@ -28,9 +28,11 @@ The problem lies in the `xprt` line in `/proc/self/mountstats`, which contains t
 xprt: tcp 695 1 1 0 16 96099368 96091328 6383 341933213458 1504192
 ```
 
-All fields are explained in the link above. The crux is the following part:
+All fields are explained in the link above. The crux is the following part[^quote1]:
 
 > For the udp RPC transport there is no connection count, connect idle time, or idle time (fields #3, #4, and #5); all other fields are the same.
+
+[^quote1]: [Link](https://utcc.utoronto.ca/%7Ecks/space/blog/linux/NFSMountstatsXprt) --- retrieved 2018-12-10
 
 This means that for UDP, the line contains three fewer fields than for TCP. The mountstats exporter always expects the same number of fields and therefore breaks for UDP.
 
