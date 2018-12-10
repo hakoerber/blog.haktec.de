@@ -1,0 +1,27 @@
+<table class="list">
+  {{ if isset .Params "infos" }}
+  <thead>
+    <tr>
+      {{ range .Params.infos }}
+      <th>{{ title . }}</th>
+      {{ end }}
+    </tr>
+  </thead>
+  {{ end }}
+  <tbody>
+    <tr>
+      {{ range .Paginator.Pages }}
+      <td>
+        <time datetime="{{- .Date.Format "2006-01-02" -}}">
+          {{- .Date.Format "2006-01-02" -}}
+        </time>
+      </td>
+      <td>
+        <a href="{{ .URL }}">
+          {{ .Title }}
+        </a>
+      </td>
+    </tr>
+    {{ end }}
+  </tbody>
+</table>

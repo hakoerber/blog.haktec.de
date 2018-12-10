@@ -1,3 +1,3 @@
 FROM nginx:1.12.2-alpine
 
-ADD _site/ /usr/share/nginx/html/
+ADD public/ /usr/share/nginx/html/

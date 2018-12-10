@@ -1,0 +1,17 @@
+{{ define "main" }}
+  <article>
+    <h1>
+      {{- title .Title -}}
+    </h1>
+    {{- if .Params.toc -}}
+    <div class="toc">
+    <aside>
+      <h3>Content</h2>
+      {{ .TableOfContents }}
+    </aside>
+    </div>
+    {{- end -}}
+
+    {{- .Content -}}
+  </article>
+{{ end }}

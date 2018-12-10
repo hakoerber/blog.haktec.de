@@ -1,0 +1,17 @@
+{{ define "main" }}
+  <h1 class="heading">{{ .Site.Title }}</h1>
+  <div class="content">
+  {{ .Content }}
+
+  <h2>Sitemap</h2>
+  <ul>
+    {{ range .Site.Menus.main }}
+    <li>
+      <a href="{{ .URL }}" title="{{ .Name }}">
+        {{ .Name }}
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+  </div>
+{{ end }}

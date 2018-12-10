@@ -1,27 +1,25 @@
 pipeline:
-  build:
-    image: registry.haktec.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
-    environment:
-      TARGET: production
-    commands:
-      - make build
-    when:
-      branch:
-        include: "*"
-        exclude: staging
+  # build:
+  #   image: registry.haktec.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
+  #   environment:
+  #     TARGET: production
+  #   commands:
+  #     - make build
+  #   when:
+  #     branch:
+  #       include: "*"
+  #       exclude: staging
 
   build_staging:
-    image: registry.haktec.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
-    environment:
-      TARGET: staging
+    image: registry.haktec.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
     commands:
-      - make build
+      - /app/bin/hugo --baseURL https://staging.blog.haktec.de/ --buildDrafts --ignoreCache
     when:
       branch:
         - staging
 
   package:
-    image: registry.haktec.de/docker:2bf92189803126ca18eb9dc75ae689ffc6319ffa
+    image: registry.haktec.de/docker:636402f9f2ddd0e29f31fd1369ad69a38cb72fef
     environment:
       TARGET: production
     commands:
@@ -48,20 +46,20 @@ pipeline:
       # - KUBERNETES_CERT
       - KUBERNETES_TOKEN
 
-  deploy:
-    image: quay.io/honestbee/drone-kubernetes:master
-    deployment: de-haktec-blog
-    kubernetes_server: ${KUBERNETES_SERVER}
-    # kubernetes_cert: ${KUBERNETES_CERT}
-    kubernetes_token: ${KUBERNETES_TOKEN}
-    repo: registry.haktec.de/blog
-    container: blog
-    tag: ${DRONE_COMMIT_SHA}
-    namespace: default
-    when:
-      branch:
-        - master
-    secrets:
-      - KUBERNETES_SERVER
-      # - KUBERNETES_CERT
-      - KUBERNETES_TOKEN
+  # deploy:
+  #   image: quay.io/honestbee/drone-kubernetes:master
+  #   deployment: de-haktec-blog
+  #   kubernetes_server: ${KUBERNETES_SERVER}
+  #   # kubernetes_cert: ${KUBERNETES_CERT}
+  #   kubernetes_token: ${KUBERNETES_TOKEN}
+  #   repo: registry.haktec.de/blog
+  #   container: blog
+  #   tag: ${DRONE_COMMIT_SHA}
+  #   namespace: default
+  #   when:
+  #     branch:
+  #       - master
+  #   secrets:
+  #     - KUBERNETES_SERVER
+  #     # - KUBERNETES_CERT
+  #     - KUBERNETES_TOKEN

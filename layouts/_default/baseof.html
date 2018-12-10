@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ $.Site.LanguageCode | default "en" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="{{ $.Site.Params.author }}">
+    <meta name="description" content="{{ $.Site.Params.description }}">
+    <title>{{ .Params.Title }}</title>
+
+    {{ .Hugo.Generator }}
+
+    {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production")  }}
+      <meta name="robots" content="all">
+    {{ else }}
+      <meta name="robots" content="noindex, nofollow">
+    {{ end }}
+
+    <link rel="stylesheet" href="/css/main.css" >
+    <link rel="stylesheet" href="/fonts/fontawesome/css/all.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
+
+  <body>
+    {{ block "header" . }}{{ partial "header.html" .}}{{ end }}
+    <main class="main">
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ block "footer" . }}{{ partial "site-footer.html" . }}{{ end }}
+  </body>
+</html>
