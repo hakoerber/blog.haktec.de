@@ -53,7 +53,7 @@ Exept, that did not work, showing the network connectivity issues mentioned abov
 
 In the end, I tracked it down to an MTU issue, also mentioned [here](https://discourse.drone.io/t/docker-mtu-problem/1207). The fix is a bit ugly, because the DIND container does not expose a straight way to set the MTU. The simplest solution (after looking into [the DIND build environment](https://github.com/docker-library/docker/blob/5b158e3ca87bdc20069754a796c00b270e40cfdb/17.12/dind/)) I found was to set the startup arguments for the DIND container explicitly in the kubernetes deployment:
 
-```yml
+```diff
   - image: docker:17.12.1-dind
     name: dind
 +   command:

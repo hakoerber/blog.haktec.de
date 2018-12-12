@@ -5,7 +5,7 @@ uglyurls: false
 disablePathToLower: true
 languageCode: en-US
 canonifyURLs: false
-pygmentsStyle: "monokai"
+# pygmentsStyle: "monokai"
 pygmentsCodefences: true
 pygmentsUseClasses: true
 MetaDataFormat: yaml
