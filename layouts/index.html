@@ -1,17 +1,34 @@
 {{ define "main" }}
-  <h1 class="heading">{{ .Site.Title }}</h1>
-  <div class="content">
   {{ .Content }}
 
-  <h2>Sitemap</h2>
-  <ul>
-    {{ range .Site.Menus.main }}
-    <li>
-      <a href="{{ .URL }}" title="{{ .Name }}">
-        {{ .Name }}
-      </a>
+  <ul class="articles-list">
+    <!-- Ranges through content/blog/*.md -->
+    {{ range (.Paginate (where .Pages "Type" "blog") 5).Pages }}
+    <li class="post">
+        <a class="post-title" href="{{.RelPermalink}}">{{ .Title }}</a>
+        <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+
+        <div class="post-summary content">
+          {{ .Summary }}
+        </div>
+
+        <a href="{{.RelPermalink}}" class="read-more-link">Read more</a>
     </li>
+
     {{ end }}
+    {{ template "_internal/pagination.html" . }}
   </ul>
-  </div>
+
+
+    <h3>Sitemap</h3>
+    <ul>
+      {{ range .Site.Menus.main }}
+      <li>
+        <a href="{{ .URL }}" title="{{ .Name }}">
+          {{ .Name }}
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+
 {{ end }}
