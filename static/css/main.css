@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
     /* border: black; */
     /* border-style: solid; */
@@ -5,6 +9,10 @@ body {
     margin: 0;
     font-size: 12pt;
     font-family: serif;
+}
+
+.main img {
+    width: 100%;
 }
 
 .main {
@@ -219,10 +227,55 @@ h1, h2, h3, h4, h5 {
 }
 
 
-.content p code {
+.content :not(pre) > code {
     font-family: monospace;
     background-color: lightgray;
 }
+
+.content table {
+    border: #ddd;
+    border-style: solid;
+    border-width: 2px;
+    margin-bottom: 20px;
+    text-align: left;
+    /* background-color: red; */
+}
+
+.content table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.content table code {
+    background-color: inherit;
+}
+
+.content th, td {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.content {
+    font-family: sans;
+}
+
+.content .list-time {
+    font-family: monospace;
+}
+
+
+.content th {
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+.content th, td {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
 
 
 .content-prefix {
