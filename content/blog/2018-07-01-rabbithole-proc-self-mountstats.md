@@ -2,7 +2,6 @@
 date: 2018-07-02
 summary: |
   The rabbithole that is /proc/self/mountstats
-  Prometheus
 tags:
 - linux
 - kernel

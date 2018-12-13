@@ -33,12 +33,12 @@ It is declarative, but without a strict logic you are only poorly implementing a
 
 Let's start with a simple example:
 
-```yaml
+```yml
 - shell: echo {{ item }}
   with_items:
-    - one
-    - two
-    - three
+    - "one"
+    - "two"
+    - "three"
 ```
 
 Easy to reason about: This outputs ``one`` ``two`` ``three``. Now, Ansible has a way to express loops using YAML plus Jinja, like this:
@@ -47,9 +47,9 @@ Easy to reason about: This outputs ``one`` ``two`` ``three``. Now, Ansible has a
 - shell: echo {{ item }}
   when: item != 'two'
   with_items:
-    - one
-    - two
-    - three
+    - "one"
+    - "two"
+    - "three"
 ```
 
 If you know Ansible, you most likely know what is going to happen: If will output `one` and `three`, skipping `two`. This is of course the only way the ordering between `when` and `with_items` makes sense, but this is not at all obvious or deducible by only looking at the code. If this was instead done procedurally, it is immediately obvious:
@@ -67,8 +67,8 @@ A similar problem occurs when using `register` together with a loop, like this:
 ```yaml
 shell: echo {{ item }}
 with_items:
-  - one
-  - two
+  - "one"
+  - "two"
 register: out
 ```
 
@@ -79,7 +79,7 @@ My guess is that YAML was chosen because it is declarative. But Ansible is inher
 
 On the module level declarativeness makes a lot of sense. I do not actually care how that file gets its content and permissions, or how that package is installed. I just want to tell Ansible to make it so, and its job is to figure it out. So, YAML might actually be a good decision for module invokation:
 
-```
+```yaml
 - copy:
     dest: /etc/foo.bar
     content: 'Hey!'
@@ -96,7 +96,6 @@ This approach makes for a much more powerful syntax, because you actually have a
 
 The problem: You can shoot yourself in the foot, and SaltStack placed your target right next to your foot. There is a thin line between "That makes sense!" and "This is messy!". Take the following code as an example, taken from my salt forumla to set up Nginx together with LetsEncrypt (link [here](https://github.com/hakoerber/salt-nginx-letsencrypt)):
 
-{% raw %}
 ```jinja
 {% for domain in params.domains %}
 letsencrypt-keydir-{{ domain.name }}:
@@ -109,11 +108,9 @@ letsencrypt-keydir-{{ domain.name }}:
         - user: acme
 {% endfor %}
 ```
-{% endraw %}
 
 This is quite easy to understand. But down the rabbithole it goes, and you stumble upon something like this in a different file:
 
-{% raw %}
 ```jinja
 {% if params.get('manage_certs', True) %}
 {% set no_commoncert = [] %}
@@ -133,7 +130,6 @@ nginx-pkidir-{{ main_name }}:
 {% endfor %}
 {% endif %}
 ```
-{% endraw %}
 
 Whatever it does, I think we can agree that this is not nice to read.
 
@@ -168,42 +164,40 @@ postgresql_pwfile: ""
 
 This is simply ugly, and not the way YAML is meant to be used. Also, assume you have the following situation: You have a number of servers, and a number of admins that have access to the server, like this:
 
-```
+```yaml
 admins:
-  - name: hannes
-    sudo: True
+  - name: "hannes"
+    sudo: true
     sshpubkey: ssh-rsa ...
   - name: ...
 ```
 
 Now, you want to add a new guy to your list of users, but only for a few servers (you do not want the new guys to break production!). In a perfect world, you would go to the ``group_vars`` of those servers, and add the new guy:
 
-```
+```yaml
 admins:
-  - name: newguy
-    sudo: False
+  - name: "newguy"
+    sudo: false
     sshpubkey: ssh-rsa ...
 ```
 
 This does not work with Ansible, because the second declaration would overwrite the first, and now only your new guy has access to the servers! The only solution to that problem (as far as I can tell), is to use a differently named key:
 
-```
+```yaml
 new_admins:
-  - name: newguy
-    sudo: False
+  - name: "newguy"
+    sudo: false
     sshpubkey: ssh-rsa ...
 ```
 
 Then, merge those keys in the role you use to create users:
 
-{% raw %}
-```
+```yaml
 - user:
     name: "{{ item.name }}"
     state: present
   with_items: "{{ admins + new_admins }}"
 ```
-{% endraw %}
 
 This does not scale: As soon as you need another distinct access rule, you have to add **another** key, and the cycle repeats.
 
@@ -221,7 +215,7 @@ There are workarounds, like using ``when: not ansible_check_mode``, but these ar
 
 Ansible does not give me the same sense of reliability as e.g. puppet does.
 
-# Personal opinion
+# My opinion
 
 It might sound weird after the above but I have to say: I really like Ansible. Not so much for configuration, but for orchestration. There is simply nothing better.
 

@@ -31,23 +31,23 @@ I will not describe Ceph here, because the official website provides everything 
 
 We will be using the followings networks for our cluster:
 
-| network | name | VLAN | domain |
+| Network | Name | VLAN | Domain |
 | --- | --- | ---:| ---:|
 | `10.1.2.0/24` | `mgmt` | `20` | `mgmt.home.haktec.de` |
 | `10.1.3.0/24` | `storage` | `30` | `storage.home.haktec.de` |
 | `10.1.4.0/24` | `cluster` | isolated on the hypervisor ||
 
-| IP | host |
+| IP | Host |
 | --- | --- |
 | `10.1.{3,4}.11-` | Ceph monitors, the first one being `.11`, second one `.12`, and so on |
 | `10.1.{3,4}.21-` | Ceph storage servers, same scheme as above, but from `.21` |
 
-| IP | host |
+| IP | Host |
 | --- | --- |
 | `10.1.{2,3}.100` | Admin node |
 | `10.1.2.10` | hypervisor |
 
-| hostname | host |
+| Hostname | Host |
 | --- | --- |
 | `hyper01` | hypervisor |
 | `ceph-monXX` | Ceph monitors |
@@ -143,16 +143,16 @@ The password hash can be produced like this:
 Start cobbler and do a first `sync`:
 
 ```bash
-root@admin[~]# systemctl start cobblerd
-root@admin[~]# systemctl enable cobblerd
-root@admin[~]# cobbler sync
+[~]$ sudo systemctl start cobblerd
+[~]$ sudo systemctl enable cobblerd
+[~]$ sudo cobbler sync
 ```
 
 Now we need to import a distribution from the CentOS 7 iso:
 
 ```bash
-root@admin[~]# mount -t iso9660 -o loop,ro /path/to/iso/CentOS7.iso /mnt
-root@admin[~]# cobbler import --name centos7 --arch=x86_64 --path=/mnt
+[~]$ sudo mount -t iso9660 -o loop,ro /path/to/iso/CentOS7.iso /mnt
+[~]$ sudo cobbler import --name centos7 --arch=x86_64 --path=/mnt
 ```
 
 ## Kickstarting the hypervisor
@@ -256,7 +256,7 @@ chown -R $me:$me /home/$me
 Some global variables, e.g. SSH keys, need to be set. This is done in the profile, so it will be inherited by all other systems we define:
 
 ```shell
-root@admin[~]# cobbler profile edit \
+[~]$ sudo cobbler profile edit \
     --name=centos7-x86_64 \
     --ksmeta='rootpw={hashed_password} sshkey={ssh_pubkey} me=hannes'
 ```
@@ -264,7 +264,7 @@ root@admin[~]# cobbler profile edit \
 The following will create a new system entry for the hypervisor:
 
 ```shell
-root@admin[~]# cobbler system add \
+[~]$ sudo cobbler system add \
     --name=hyper01.mgmt.haktec.de \
     --profile=centos7-x86_64 \
     --kickstart=/var/lib/cobbler/kickstarts/hyper01.ks \
@@ -342,13 +342,13 @@ BOOTPROTO=dhcp
 After this, the `network` service has to be restarted:
 
 ```shell
-root@hyper01[~]# systemctl restart network
+[~]$ sudo systemctl restart network
 ```
 
 Check the RAID Setup:
 
 ```shell
-root@hyper01[~]# cat /proc/mdstat
+[~]$ sudo cat /proc/mdstat
 Personalities : [raid1]
 md126 : active raid1 sdb2[0] sda2[1]
       122489856 blocks super 1.2 [2/2] [UU]
@@ -364,47 +364,47 @@ unused devices: <none>
 Update the system:
 
 ```shell
-root@hyper01[~]# yum update
+[~]$ sudo yum update
 ```
 
 Enable passwordless sudo:
 
 ```shell
-root@hyper01[~]# groupadd --system sudo
-root@hyper01[~]# echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-root@hyper01[~]# gpasswd -a hannes sudo
+[~]$ sudo groupadd --system sudo
+[~]$ sudo echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+[~]$ sudo gpasswd -a hannes sudo
 ```
 
 Disable SSH Password Authentication:
 
 ```shell
-root@hyper01[~]# sed -i -e 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-root@hyper01[~]# systemctl restart sshd
+[~]$ sudo sed -i -e 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+[~]$ sudo systemctl restart sshd
 ```
 
 # Setting up libvirt
 
 ```shell
-root@hyper01[~]# yum install libvirt qemu-kvm
+[~]$ sudo yum install libvirt qemu-kvm
 ```
 
 Everyone in group `libvirt` is allowed to access libvirt:
 
 ```shell
-root@hyper01[~]# gpasswd -a hannes libvirt
+[~]$ sudo gpasswd -a hannes libvirt
 ```
 
 Start libvirt:
 
 ```shell
-root@hyper01[~]# systemctl start libvirtd
-root@hyper01[~]# systemctl enable libvirtd
+[~]$ sudo systemctl start libvirtd
+[~]$ sudo systemctl enable libvirtd
 ```
 
 Connect to the hypervisor:
 
 ```shell
-@hyper01[~]$ virsh --connect=qemu:///system
+[~]$ virsh --connect=qemu:///system
 ```
 
 ## libvirt storage setup
@@ -428,10 +428,10 @@ Connect to the hypervisor:
 Define and start the pool:
 
 ```shell
-root@hyper01[~]# virsh pool-define pool-lvm-hyper01.xml
-root@hyper01[~]# virsh pool-start lvm-hyper01
-root@hyper01[~]# virsh pool-autostart lvm-hyper01
-root@hyper01[~]# virsh pool-list --all --details
+[~]$ sudo virsh pool-define pool-lvm-hyper01.xml
+[~]$ sudo virsh pool-start lvm-hyper01
+[~]$ sudo virsh pool-autostart lvm-hyper01
+[~]$ sudo virsh pool-list --all --details
  Name         State    Autostart  Persistent    Capacity  Allocation   Available
 ---------------------------------------------------------------------------------
  lvm-hyper01  running  yes        yes         116.81 GiB   10.00 GiB  106.81 GiB
@@ -444,8 +444,8 @@ root@hyper01[~]# virsh pool-list --all --details
 Remove the `default` network:
 
 ```
-root@hyper01[~]# virsh net-destroy default
-root@hyper01[~]# virsh net-undefine default
+[~]$ sudo virsh net-destroy default
+[~]$ sudo virsh net-undefine default
 ```
 
 Define the relevant bridges:
@@ -473,7 +473,7 @@ NETMASK=255.255.255.0
 ```
 
 ```shell
-root@hyper01[~]# systemctl restart network
+hyper01[~]$ sudo systemctl restart network
 ```
 
 Network definitions:
@@ -502,16 +502,16 @@ Network definitions:
 Start the networks:
 
 ```shell
-root@hyper01[~]# virsh net-define network-cluster.xml
-root@hyper01[~]# virsh net-define network-storage.xml
+[~]$ sudo virsh net-define network-cluster.xml
+[~]$ sudo virsh net-define network-storage.xml
 
-root@hyper01[~]# virsh net-start cluster
-root@hyper01[~]# virsh net-start storage
+[~]$ sudo virsh net-start cluster
+[~]$ sudo virsh net-start storage
 
-root@hyper01[~]# virsh net-autostart cluster
-root@hyper01[~]# virsh net-autostart storage
+[~]$ sudo virsh net-autostart cluster
+[~]$ sudo virsh net-autostart storage
 
-root@hyper01[~]# virsh net-list --all
+[~]$ sudo virsh net-list --all
  Name                 State      Autostart     Persistent
 ----------------------------------------------------------
  cluster              active     yes           yes
@@ -527,11 +527,11 @@ root@hyper01[~]# virsh net-list --all
 Create the storage volume:
 
 ```shell
-root@hyper01[~]# virsh vol-create-as --pool lvm-hyper01 --name virt-mon01 --capacity 10GiB --format raw
+[~]$ sudo virsh vol-create-as --pool lvm-hyper01 --name virt-mon01 --capacity 10GiB --format raw
 ```
 
 ```shell
-root@hyper01[~]# lvdisplay vg.hyper01/virt-mon01
+[~]$ sudo lvdisplay vg.hyper01/virt-mon01
   --- Logical volume ---
   LV Path                /dev/vg.hyper01/virt-mon01
   LV Name                virt-mon01
@@ -610,13 +610,13 @@ Domain definition:
 Define the VM:
 
 ```shell
-root@hyper01[~]# virsh define domain-ceph-mon01.xml
+[~]$ sudo virsh define domain-ceph-mon01.xml
 ```
 
 Attach the ISO for installation:
 
 ```shell
-root@hyper01[~]# virsh attach-disk \
+[~]$ sudo virsh attach-disk \
     --domain ceph-mon01 \
     --source /var/lib/libvirt/iso/CentOS-7-x86_64-Minimal-1511.iso \
     --target vdz \
@@ -627,12 +627,11 @@ root@hyper01[~]# virsh attach-disk \
 Start the VM:
 
 ```shell
-root@hyper01[~]# virsh start ceph-mon01
+[~]$ sudo virsh start ceph-mon01
 ```
 
 Install CentOS, kickstart:
 
-{%raw%}
 ```shell
 # AUTHENTICATION AND USERS
 auth --enableshadow --passalgo=sha512
@@ -699,16 +698,15 @@ chmod 600 /home/hannes/.ssh/authorized_keys
 chown -R hannes:hannes /home/hannes
 %end
 ```
-{%endraw%}
 
 How to make the kickstart file available from the hypervisor:
 
 ```shell
-root@hyper01[~]# while :; do nc -l 8080 < ks.cfg ; done
+[~]$ while :; do nc -l 8080 < ks.cfg ; done
 ```
 
 ```shell
-root@hyper01[~]# dnsmasq -d -i br-storage -I lo --bind-interfaces --dhcp-range=10.3.1.100,10.3.1.199,255.255.255.0 -C /dev/null
+[~]$ sudo dnsmasq -d -i br-storage -I lo --bind-interfaces --dhcp-range=10.3.1.100,10.3.1.199,255.255.255.0 -C /dev/null
 ```
 
 Install the guest and wait for it to shut down.
@@ -716,13 +714,13 @@ Install the guest and wait for it to shut down.
 Detach the ISO:
 
 ```shell
-root@hyper01[~]# virsh detach-disk --domain ceph-mon01 --target vdz --config
+[~]$ sudo virsh detach-disk --domain ceph-mon01 --target vdz --config
 ```
 
 Start it again in order to set it up:
 
 ```shell
-root@hyper01[~]# virsh start ceph-mon01
+[~]$ sudo virsh start ceph-mon01
 ```
 
 Log in, and do the usual deployment stuff.
@@ -758,42 +756,42 @@ HWADDR=52:54:00:3b:2c:3a
 ```
 
 ```shell
-[root@ceph-mon01]# systemctl restart network
+ceph-mon01[~]$ sudo systemctl restart network
 ```
 
 From above:
 
 ```shell
-[root@ceph-mon01]# yum update
+ceph-mon01[~]$ sudo yum update
 
-[root@ceph-mon01]# groupadd --system sudo
-[root@ceph-mon01]# echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-[root@ceph-mon01]# gpasswd -a hannes sudo
+ceph-mon01[~]$ sudo groupadd --system sudo
+ceph-mon01[~]$ sudo echo '%sudo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+ceph-mon01[~]$ sudo gpasswd -a hannes sudo
 
-[root@ceph-mon01]# sed -i -e 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-[root@ceph-mon01]# systemctl restart sshd
+ceph-mon01[~]$ sudo sed -i -e 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+ceph-mon01[~]$ sudo systemctl restart sshd
 ```
 
 Let's create a user called `cephdeploy` that has passwordless sudo rights and SSH Pubkey authentication:
 
 ```shell
-[root@ceph-mon01]# useradd --create-home --groups sudo cephdeploy
-[root@ceph-mon01]# echo "ssh-rsa {{pubkey}} hannes" > /home/cephdeploy/.ssh/authorized_keys
-[root@ceph-mon01]# chmod -R go= /home/cephdeploy/.ssh/
-[root@ceph-mon01]# chown -R cephdeploy:cephdeploy /home/cephdeploy/
+ceph-mon01[~]$ sudo useradd --create-home --groups sudo cephdeploy
+ceph-mon01[~]$ sudo echo "ssh-rsa {{pubkey}} hannes" > /home/cephdeploy/.ssh/authorized_keys
+ceph-mon01[~]$ sudo chmod -R go= /home/cephdeploy/.ssh/
+ceph-mon01[~]$ sudo chown -R cephdeploy:cephdeploy /home/cephdeploy/
 ```
 
 The following is necessary for `ceph-deploy` to work:
 
 ```shell
-[root@ceph-mon01]# echo 'Defaults:cephdeploy !requiretty' >> /etc/sudoers
+ceph-mon01[~]$ sudo echo 'Defaults:cephdeploy !requiretty' >> /etc/sudoers
 ```
 
 Install Ceph:
 
 ```shell
-[root@ceph-mon01]# yum install epel-release
-[root@ceph-mon01]# yum install ceph
+ceph-mon01[~]$ sudo yum install epel-release
+ceph-mon01[~]$ sudo yum install ceph
 ```
 
 Because we will use this VM as the base for the two OSD VMs, some cleanup is helpful:
@@ -804,14 +802,14 @@ Because we will use this VM as the base for the two OSD VMs, some cleanup is hel
 Define two more machines in libvirt:
 
 ```shell
-root@hyper01[~]# virsh vol-create-as --pool lvm-hyper01 --name virt-stg01 --capacity 10GiB --format raw
-root@hyper01[~]# virsh vol-create-as --pool lvm-hyper01 --name virt-stg02 --capacity 10GiB --format raw
+hyper01[~]$ sudo virsh vol-create-as --pool lvm-hyper01 --name virt-stg01 --capacity 10GiB --format raw
+hyper01[~]$ sudo virsh vol-create-as --pool lvm-hyper01 --name virt-stg02 --capacity 10GiB --format raw
 
-root@hyper01[~]# virsh vol-create-as --pool lvm-hyper01 --name virt-stg01-journal --capacity 5GiB --format raw
-root@hyper01[~]# virsh vol-create-as --pool lvm-hyper01 --name virt-stg02-journal --capacity 5GiB --format raw
+hyper01[~]$ sudo virsh vol-create-as --pool lvm-hyper01 --name virt-stg01-journal --capacity 5GiB --format raw
+hyper01[~]$ sudo virsh vol-create-as --pool lvm-hyper01 --name virt-stg02-journal --capacity 5GiB --format raw
 
-root@hyper01[~]# dd bs=4M status=progress if=/dev/vg.hyper01/virt-mon01 of=/dev/vg.hyper01/virt-stg01
-root@hyper01[~]# dd bs=4M status=progress if=/dev/vg.hyper01/virt-mon01 of=/dev/vg.hyper01/virt-stg02
+hyper01[~]$ sudo dd bs=4M status=progress if=/dev/vg.hyper01/virt-mon01 of=/dev/vg.hyper01/virt-stg01
+hyper01[~]$ sudo dd bs=4M status=progress if=/dev/vg.hyper01/virt-mon01 of=/dev/vg.hyper01/virt-stg02
 ```
 
 Domain definitions:
@@ -884,11 +882,11 @@ Domain definitions:
 Analogous for `ceph-stg02`.
 
 ```shell
-root@hyper01[~]# virsh define domain-ceph-stg01.xml
-root@hyper01[~]# virsh define domain-ceph-stg02.xml
+hyper01[~]$ sudo virsh define domain-ceph-stg01.xml
+hyper01[~]$ sudo virsh define domain-ceph-stg02.xml
 
-root@hyper01[~]# virsh start ceph-stg01
-root@hyper01[~]# virsh start ceph-stg02
+hyper01[~]$ sudo virsh start ceph-stg01
+hyper01[~]$ sudo virsh start ceph-stg02
 ```
 
 For each server:
@@ -896,15 +894,15 @@ For each server:
 Update the hostname:
 
 ```shell
-[root@ceph-stg01]# hostnamectl set-hostname ceph-stg01.storage.haktec.de
-[root@ceph-stg02]# hostnamectl set-hostname ceph-stg02.storage.haktec.de
+ceph-stg01[~]$ sudo hostnamectl set-hostname ceph-stg01.storage.haktec.de
+ceph-stg02[~]$ sudo hostnamectl set-hostname ceph-stg02.storage.haktec.de
 ```
 
 Clean the SSH Host Keys:
 
 ```shell
-[root@ceph-stg01]# rm -f /etc/ssh/ssh_host*
-[root@ceph-stg02]# rm -f /etc/ssh/ssh_host*
+ceph-stg01[~]$ sudo rm -f /etc/ssh/ssh_host*
+ceph-stg02[~]$ sudo rm -f /etc/ssh/ssh_host*
 ```
 
 Adapt `/etc/sysconfig/network-scripts/ifcfg-eth0` and `/etc/sysconfig/network-scripts/ifcfg-eth1`.

@@ -19,15 +19,15 @@ I connected old and new laptop via ethernet, booted the old laptop into recovery
 First, the two computers need a network connection. On the old laptop:
 
 ```shell
-[~]# ip addr add 10.1.1.1/24 dev enp1s0f0
-[~]# ip l set dev enp1s0f0 up
+[~]$ sudo ip addr add 10.1.1.1/24 dev enp1s0f0
+[~]$ sudo ip l set dev enp1s0f0 up
 ```
 
 and on the new laptop:
 
 ```shell
-[~]# ip addr add 10.1.1.2/24 dev enp1s0
-[~]# ip l set dev enp1s0
+[~]$ sudo ip addr add 10.1.1.2/24 dev enp1s0
+[~]$ sudo ip l set dev enp1s0
 ```
 
 Notice the different interface names. Check connectivity:
@@ -49,7 +49,7 @@ Looks good!
 On the "receiving" (new) laptop, I made `netcat` listen on the network, together with `pv` to get an idea of the transmission rate:
 
 ```shell
-[~]# nc -l -p 4000 | pv -pterab -s 117g >/dev/sda
+[~]$ nc -l -p 4000 | pv -pterab -s 117g | sudo dd of=/dev/sda
 ```
 
 The switches for `pv` give us some nice metrics, see [`pv(1)`](https://linux.die.net/man/1/pv) for more info. The `117g` is the size of the disk, this is necessary to get an ETA and a progress meter.
@@ -57,7 +57,7 @@ The switches for `pv` give us some nice metrics, see [`pv(1)`](https://linux.die
 Now, start the transfer on the old laptop:
 
 ```shell
-[~]# nc 10.1.1.2 4000 </dev/sda
+[~]$ sudo dd if=/dev/sda | nc 10.1.1.2 4000
 ```
 
 The transfer took around 20 minutes at about 100 MB/s, which means the Ethernet is actually the bottleneck).
@@ -65,7 +65,7 @@ The transfer took around 20 minutes at about 100 MB/s, which means the Ethernet 
 After that, I verified the first few bytes of the disk to make sure they are actually the same:
 
 ```shell
-[~]# dd if=/dev/sda bs=1M count=1 status=none | md5sum
+[~]$ sudo dd if=/dev/sda bs=1M count=1 status=none | md5sum
 d4bf772aa861fef76ff777aa52ec6800  -
 ```
 

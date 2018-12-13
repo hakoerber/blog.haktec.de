@@ -15,8 +15,8 @@ At the [7th DevOps Camp](https://devops-camp.de/devops-camp-12-14-mai-2017/) in 
 
 In that talk, they arranged those tools along two axes:
 
-* *Procedural* vs. *Declarative*
-* *Client-Server* vs *Client-only*
+* **Procedural** vs. **Declarative**
+* **Client-Server** vs **Client-only**
 
 Ansible and Puppet differ on both of those metrics, which Ansible being a procedular client-only system and puppet being a declarative system following a client-server architecture.
 
@@ -60,7 +60,7 @@ A declarative approach means we have to *declare* (duh) the state we want to hav
 
 We define the target state (green), and do not have to care about whatever state there currently is on the system, nor about state transitions. This is all in the tool's hands.
 
-{% digraph some graph title %}
+```viz-dot
 rank = same
 rankdir = LR
 ranksep = 1.5
@@ -90,7 +90,7 @@ edge [
 "state 1" -> "target state"
 "state 2" -> "target state"
 "state 3" -> "target state"
-{% enddigraph %}
+```
 
 
 The cool thing about the declarative approach is that it scales lineary with the number of states: When you introduce a new system with a new target state, you only have to write one declaration for that system, and you're done. It also gives you a nice sense of confidence: When our declaration is sufficently comprehensive, we can be certain that our system is in line with our configuration.

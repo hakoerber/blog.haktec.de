@@ -67,7 +67,7 @@ On every server that sends its logs to our logserver, rsyslog is installed and c
 
 Sending data over TCP can be done via the [omfwd](http://www.rsyslog.com/doc/v8-stable/configuration/modules/omfwd.html) output module that is included in rsyslog by default. The configuration looks like this:
 
-```
+```java
 action(
   type="omfwd"
   Template="syslog-json"
@@ -79,7 +79,7 @@ action(
 
 Here we use TCP port 515, because 514 is commonly used for plain syslog. The `template` directive defines which template we use to format the logs. The template for syslog messages looks like this and must be defined **before** the accompanying `action`:
 
-```
+```java
 template(name="syslog-json" type="list") {
   constant(value="{")
   constant(value="\"logtype\":\"")       constant(value="syslog"             format="json")
@@ -105,7 +105,7 @@ The `format="json"` option for the property replacers makes sure that the string
 
 Forwarding logfiles is a bit more complex: For each file, a template and input module definition is needed, together with ruleset to bind both to a output module. The input is defined as a [imfile](http://www.rsyslog.com/doc/v8-stable/configuration/modules/imfile.html) module. For an nginx access logfile, it would look like this:
 
-```
+```java
 input(type="imfile"
     File="/var/log/nginx/access.log"
     Tag="nginx-access"
@@ -122,7 +122,7 @@ Lastly, the `ruleset` determines which ruleset to bind this input to. This will 
 
 The template that is used to pack the information into JSON looks like this:
 
-```
+```java
 template(name="nginx-access-json" type="list") {
   constant(value="{")
   constant(value="\"logtype\":\"")        constant(value="application"  format="json")
@@ -139,7 +139,7 @@ template(name="nginx-access-json" type="list") {
 
 The `action` that sends the logs to the logging server looks the same for both syslog and file forwarding. But because each file action only applies to a single file, a `ruleset` needs to be defined to bind the `action` and the `template` together:
 
-```
+```java
 ruleset(name="forward-nginx-access") {
   action(
   type="omfwd"

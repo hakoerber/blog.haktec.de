@@ -86,23 +86,26 @@ The mentinoned mirrors will use about 27GB of space, so we have to make sure the
 Now it's time for a first sync:
 
 ```shell
-root[~]# mkdir -p /srv/www/packages/centos/7/
-root[~]# mkdir -p /srv/www/packages/epel/7/
-root[~]# /usr/local/bin/syncrepo --config /etc/syncrepo.conf
+[~]$ sudo mkdir -p /srv/www/packages/centos/7/
+[~]$ sudo mkdir -p /srv/www/packages/epel/7/
+[~]$ sudo /usr/local/bin/syncrepo --config /etc/syncrepo.conf
 ```
 
 This simply executes the following four commands (one for each repo):
 
 ```
 rsync $OPTIONS rsync://ftp.fau.de/centos/7/extras/  /srv/www/packages/centos/7/extras
+
 rsync $OPTIONS rsync://ftp.fau.de/centos/7/updates/ /srv/www/packages/centos/7/updates
+
 rsync $OPTIONS rsync://ftp.fau.de/centos/7/os/      /srv/www/packages/centos/7/os
+
 rsync $OPTIONS rsync://ftp.fau.de/epel/7/x86_64/    /srv/www/packages/epel/7/x86_64
 ```
 
 with OPTIONS being
 
-```
+```bash
 --hard-links --out-format "%t %i %n%L " --stats --recursive --update --delete --delete-after --delay-updates
 ```
 
@@ -111,7 +114,7 @@ to make updates as atomic as possible and give some sensible output.
 This is going to take a while. In the meantime, we can setup a webserver to serve those files over HTTP. I'm going to use nginx here. This can be done using the `repomirror` salt role from the [salt role collection](https://github.com/hakoerber/salt-roles) ([direct link](https://raw.githubusercontent.com/hakoerber/salt-roles/master/repomirror.sls)):
 
 ```shell
-root[~]# salt-call state.sls roles.repomirror
+[~]$ sudo salt-call state.sls roles.repomirror
 ```
 
 This installs nginx to serve `/srv/www/packages`, configures iptables and sets up rsync and logstash. Yay salt!
@@ -142,13 +145,13 @@ http {
 If using the salt role, nginx should already be running, otherwise
 
 ```shell
-root[~]# systemctl start nginx
+[~]$ sudo systemctl start nginx
 ```
 
 will do it manually. Note that when `/srv/www/packages` is a NFS mount and SELinux is enabled, a boolean needs to be set to allow nginx to use NFS:
 
 ```shell
-root[~]# setsebool -P httpd_use_nfs=1
+[~]$ sudo setsebool -P httpd_use_nfs=1
 ```
 
 Now, when `syncrepo` is done, the server is a functioning mirror, ready to distribute packages to clients. The last thing to do is automating a repo sync at a certain interval. Cron is perfect for this. The following line in `/etc/crontab` will run the sync each day at 22:00 with a random one hour max delay, which gives it enough time to finish before the clients retrieve their updates (which is between 0:00 and 6:00 as mentioned above):
@@ -198,16 +201,16 @@ applications:
 parameters:
   applications:
   localrepo:
-      domain: lab
+      domain: "lab"
       repos:
       base:
-          url: centos/$releasever/os/$basearch
+          url: "centos/$releasever/os/$basearch"
       updates:
-          url: centos/$releasever/updates/$basearch
+          url: "centos/$releasever/updates/$basearch"
       extras:
-          url: centos/$releasever/extras/$basearch
+          url: "centos/$releasever/extras/$basearch"
       epel:
-          url: epel/$releasever/$basearch
+          url: "epel/$releasever/$basearch"
 ```
 
 Then, the mirror will be "advertised" to all servers on the `.lab` domain:
@@ -232,15 +235,15 @@ Installing packages manually is always a bit of a bad habit in an automated envi
 First, a new repository is needed, called `custom`, that contains -- well -- custom packages. On our mirror server:
 
 ```shell
-root[~]# mkdir -p /srv/www/packages/custom/centos/7/x86_64/
+[~]$ sudo mkdir -p /srv/www/packages/custom/centos/7/x86_64/
 ```
 
 Now we need something to put there. As an example, let's package the `syncrepo` script mentioned above. We need a user for building packages (building as root is evil™), and install fpm:
 
 ```shell
-root[~]# useradd -d /var/build -m build
-root[~]# yum install -y ruby-devel gcc rpmbuild createrepo
-root[~]# sudo -su build
+[~]$ sudo useradd -d /var/build -m build
+[~]$ sudo yum install -y ruby-devel gcc rpmbuild createrepo
+[~]$ sudo -su build
 
 build[~]$ cd ~
 build[~]$ gem install fpm
@@ -292,13 +295,13 @@ build[~/syncrepo]$ make
 will now build the package and put it into the `package` directory. Nearly done! The only thing left is to make the package available over HTTP. First, it has to be copied into our custom repository:
 
 ```shell
-root[~]# cp /var/build/syncrepo/package/syncrepo-1.0-1.x86_64.rpm /srv/srv/www/packages/custom/centos/7/x86_64/
+[~]$ sudo cp /var/build/syncrepo/package/syncrepo-1.0-1.x86_64.rpm /srv/srv/www/packages/custom/centos/7/x86_64/
 ```
 
 The last thing that has to be done on the server is building the repository metadata wtth `createrepo` (that was installed above):
 
 ```shell
-root[~]# createrepo -v --no-database /srv/srv/www/packages/custom/centos/7/x86_64/
+[~]$ sudo createrepo -v --no-database /srv/srv/www/packages/custom/centos/7/x86_64/
 ```
 
 To make the other servers use the repo, they have to know about it. Let's make salt do this. First, we again have to "advertise" the repo in reclass:
@@ -307,17 +310,17 @@ To make the other servers use the repo, they have to know about it. Let's make s
 parameters:
   applications:
     localrepo:
-      domain: lab
+      domain: "lab"
       repos:
         ...
         custom:
-          url: custom/centos/$releasever/$basearch
+          url: "custom/centos/$releasever/$basearch"
 ```
 
 After the next salt run, all servers will be able to access the custom repo, and we can install `syncrepo` the "clean" way with
 
 ```shell
-root[~]# yum install -y syncrepo
+[~]$ sudo yum install -y syncrepo
 ```
 
 ## Conclusion
