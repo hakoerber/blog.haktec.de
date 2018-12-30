@@ -1,27 +1,57 @@
 <div class="pagelist">
   <table>
     {{ if isset .Params "infos" }}
+    {{ if gt (len .Params.infos) 1 }}
     <thead>
       <tr>
-        {{ range .Params.infos }}
-        <th>{{ title . }}</th>
+      {{ range .Params.infos }}
+        <th>{{ title .name }}</th>
         {{ end }}
       </tr>
     </thead>
     {{ end }}
+    {{ end }}
     <tbody>
       <tr>
-        {{ range .Paginator.Pages }}
-        <td>
-          <time class="list-time" datetime="{{- .Date.Format "2006-01-02" -}}">
-            {{- .Date.Format "2006-01-02" -}}
-          </time>
-        </td>
-        <td>
-          <a href="{{ .URL }}">
-            {{ .Title }}
-          </a>
-        </td>
+        {{ range $page := .Paginator.Pages }}
+          {{ range $info := $.Params.infos }}
+
+          {{ $key := "" }}
+          {{ if eq (index $info "key") nil }}
+          {{ $key = $info.name }}
+          {{ else }}
+          {{ $key = $info.key }}
+          {{ end }}
+          {{ $value := (index $page.Params $key) }}
+
+          {{ $type := "" }}
+          {{ if ne (index $info "type") nil }}
+          {{ $type = $info.type }}
+          {{ end }}
+
+          {{ $link := false }}
+          {{ if ne (index $info "link") nil }}
+          {{ $link = (index $info "link") }}
+          {{ end }}
+
+          {{ if (eq $type "date") }}
+          <td>
+            <time class="list-time" datetime="{{- dateFormat "2006-01-02" $value -}}">
+              {{- dateFormat "2006-01-02" $value -}}
+            </time>
+          </td>
+          {{ else }}
+          <td>
+            {{ if (eq $link true) }}
+            <a href="{{ $page.URL }}">
+              {{ $value }}
+            </a>
+            {{ else }}
+              {{ $value }}
+            {{ end }}
+          </td>
+          {{ end }}
+        {{ end }}
       </tr>
       {{ end }}
     </tbody>

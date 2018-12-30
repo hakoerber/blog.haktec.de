@@ -1,4 +1,6 @@
 ---
+infos:
+- name: title
 date: 2018-07-03
 tags:
 - linux

@@ -7,7 +7,6 @@
         {{ range (.Paginate (where .Pages "Type" "blog") 5).Pages }}
         <li class="post">
           <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
 
           <div class="post-summary content">
             {{ if isset .Params "summary" }}
@@ -18,7 +17,8 @@
           </div>
 
           <div class="post-footer">
-            <a href="{{ .RelPermalink }}" class="read-more-link">Read more</a>
+          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+            <!-- <a href="{{ .RelPermalink }}" class="read-more-link">Read more</a> -->
             <ul class="article-tags tags">
               {{ range .Params.tags }}
               <li>

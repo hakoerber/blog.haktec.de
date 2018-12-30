@@ -4,6 +4,7 @@ date: 2018-11-01
 tags:
 - prometheus
 - monitoring
+location: Ansbach
 ---
 # About
 
