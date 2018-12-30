@@ -1,46 +1,51 @@
 {{ define "main" }}
-  {{ .Content }}
+  <article class="article">
+    <div class="content item">
+      {{ .Content }}
 
-  <ul class="articles-list">
-    {{ range (.Paginate (where .Pages "Type" "blog") 5).Pages }}
-    <li class="post">
-      <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
-      <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+      <ul class="articles-list">
+        {{ range (.Paginate (where .Pages "Type" "blog") 5).Pages }}
+        <li class="post">
+          <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
 
-      <div class="post-summary content">
-        {{ if isset .Params "summary" }}
-          {{ .Params.summary }}
-        {{ else }}
-          {{ .Summary }}
+          <div class="post-summary content">
+            {{ if isset .Params "summary" }}
+              {{ .Params.summary }}
+            {{ else }}
+              {{ .Summary }}
+            {{ end }}
+          </div>
+
+          <div class="post-footer">
+            <a href="{{ .RelPermalink }}" class="read-more-link">Read more</a>
+            <ul class="article-tags tags">
+              {{ range .Params.tags }}
+              <li>
+                <a href="{{ "/tags/" }}{{ . | urlize }}"> {{ title . }}</a>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+        </li>
+
         {{ end }}
-      </div>
+        {{ template "_internal/pagination.html" . }}
+      </ul>
 
-      <div class="post-footer">
-        <a href="{{ .RelPermalink }}" class="read-more-link">Read more</a>
-        <ul class="article-tags tags">
-          {{ range .Params.tags }}
+
+      <div class="sitemap">
+        <h3>Sitemap</h3>
+        <ul>
+          {{ range .Site.Menus.main }}
           <li>
-            <a href="{{ "/tags/" }}{{ . | urlize }}"> {{ title . }}</a>
+            <a href="{{ .URL }}" title="{{ .Name }}">
+              {{ .Name }}
+            </a>
           </li>
           {{ end }}
         </ul>
       </div>
-    </li>
-
-    {{ end }}
-    {{ template "_internal/pagination.html" . }}
-  </ul>
-
-
-    <h3>Sitemap</h3>
-    <ul>
-      {{ range .Site.Menus.main }}
-      <li>
-        <a href="{{ .URL }}" title="{{ .Name }}">
-          {{ .Name }}
-        </a>
-      </li>
-      {{ end }}
-    </ul>
-
+    </div>
+  </article>
 {{ end }}

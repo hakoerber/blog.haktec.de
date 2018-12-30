@@ -1,33 +1,38 @@
 {{ define "main" }}
-  <article>
+  <article class="article">
     <div class="content-prefix">
-    <h1 class="heading">
-      {{- title .Title -}}
-    </h1>
-    <time class="date" datetime="{{- .Date.Format "2006-01-02" -}}">
-      {{- .Date.Format "2006-01-02" -}}
-    </time>
+      <h1 class="heading">
+        {{- title .Title -}}
+      </h1>
+      <time class="date" datetime="{{- .Date.Format "2006-01-02" -}}">
+        {{- .Date.Format "2006-01-02" -}}
+      </time>
+    </div>
+
+    <div class="content item">
+      {{- .Content -}}
+      <div class="content-postfix">
+        <div class="tags">
+          <h3>Tags</h3>
+          {{- partial "taglist.html" . -}}
+        </div>
+        <div class="seealso">
+          <h3>See also</h3>
+          {{- partial "related.html" . -}}
+        </div>
+      </div>
     </div>
 
     {{- if .Params.toc -}}
-    <div id="toc">
+    <div id="toc" class="item">
     <aside>
-      <h3 id="toc-heading">Content</h3>
-      {{ .TableOfContents }}
+      <h3>Content</h3>
+      <div class="toc-content">
+        {{ .TableOfContents }}
+      </div>
     </aside>
     </div>
     {{- end -}}
 
-    <div class="content">
-    {{- .Content -}}
-    </div>
-    <div class="content-postfix">
-    <div class="tags">
-    <h3>Tags</h3>
-    {{- partial "taglist.html" . -}}
-    </div>
-    <h3>See also</h3>
-    {{- partial "related.html" . -}}
-    </div>
   </article>
 {{ end }}
