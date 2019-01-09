@@ -11,7 +11,7 @@ sites:
   - url: "https://gitlab.com/whatevsz"
     fa_icon: "fa-gitlab"
     name: Gitlab
-  - url: "https://code.haktec.de/explore/projects"
+  - url: "https://code.hkoerber.de/explore/projects"
     fa_icon: "fa-code"
     name: Code
   - url: "https://www.linkedin.com/in/hannes-k%C3%B6rber-479ab5122"
@@ -32,6 +32,6 @@ sites:
   - url: "https://status.haktec.de"
     fa_icon: "fa-plus-circle"
     name: Status
-  - url: "https://blog.haktec.de/resume"
+  - url: "https://blog.hkoerber.de/resume"
     fa_icon: "fa-file-text-o"
     name: Resume
