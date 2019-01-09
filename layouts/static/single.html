@@ -1,20 +1,12 @@
 {{ define "main" }}
-  <article>
+  <article class="article">
     <div class="content-prefix">
-    <h1 class="heading">
-      {{- title .Title -}}
-    </h1>
-    {{- if .Params.toc -}}
-    <div class="toc">
-    <aside>
-      <h3>Content</h2>
-      {{ .TableOfContents }}
-    </aside>
+      <h1 class="heading">
+        {{- title .Title -}}
+      </h1>
     </div>
-    {{- end -}}
-    </div>
-    <div class="content">
-    {{- .Content -}}
+    <div class="content item">
+      {{- .Content -}}
     </div>
   </article>
 {{ end }}

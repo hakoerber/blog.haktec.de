@@ -30,7 +30,9 @@
           {{ end }}
 
           {{ $link := false }}
-          {{ if ne (index $info "link") nil }}
+          {{ if ne (index $page.Params "link") nil }}
+          {{ $link = (index $page.Params "link") }}
+          {{ else if ne (index $info "link") nil }}
           {{ $link = (index $info "link") }}
           {{ end }}
 

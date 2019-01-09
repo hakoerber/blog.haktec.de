@@ -12,12 +12,9 @@
     <div class="content item">
       {{- .Content -}}
       <div class="content-postfix">
-        <div class="tags">
-          <h3>Tags</h3>
-          {{- partial "taglist.html" . -}}
-        </div>
-        {{- partial "related.html" . -}}
+        {{- partial "taglist.html" . -}}
       </div>
+      {{- partial "related.html" . -}}
     </div>
 
     {{- if .Params.toc -}}
