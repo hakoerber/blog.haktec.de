@@ -77,9 +77,6 @@ body {
     display: inline-block;
 }
 
-.navigation .list-horizontal-item {
-}
-
 blockquote {
     border-left: black;
     border-left-style: solid;
@@ -96,9 +93,10 @@ code {
 pre {
     display: block;
     font-family: monospace;
-    white-space: pre-wrap;
+    white-space: pre;
     margin: 20px 20px;
     background-color: lightgray;
+    overflow: auto;
 }
 
 .header {
@@ -539,7 +537,7 @@ main {
 }
 .articles-list > li {
     overflow: hidden;
-    background-color: #EEEEEE;
+    background-color: #f2f2f2;
     padding: 15px;
 }
 
@@ -552,6 +550,7 @@ main {
 
 .articles-list .post-title {
     font-weight: bold;
+    font-size: 1.1em;
 }
 
 .articles-list .post-date {
@@ -563,6 +562,11 @@ main {
 .articles-list .post-summary {
     margin-top: 30px;
     margin-bottom: 10px;
+    border-left: grey;
+    border-left-style: solid;
+    border-left-width: 2px;
+    padding-left: 10px;
+    margin-left: 30px;
 }
 
 .articles-list .read-more-link {
@@ -691,6 +695,7 @@ main {
     #title {
         margin-left: auto;
         margin-top: 10px;
+        text-align: center;
     }
     .header-right {
         margin-top: 10px;
@@ -701,6 +706,11 @@ main {
     .articles-list .post-footer {
         flex-direction: column;
     }
+    .articles-list .post-title {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
     .articles-list .post-footer ul {
         margin: auto;
         margin-top: 10px;
@@ -709,7 +719,13 @@ main {
     .header-right {
         flex-direction: column;
     }
+    .navigation .list-horizontal {
+        /* margin-right: 0; */
+        overflow: hidden;
+        /* overflow-x: hidden; */
+    }
     .navigation {
         margin-right: 0px;
+        overflow: hidden;
     }
 }
