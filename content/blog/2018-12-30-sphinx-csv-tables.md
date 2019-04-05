@@ -3,7 +3,6 @@ title: "Sphinx: Use CSV macro for simple Markdown-like tables"
 date: "2018-12-30T19:39:16+01:00"
 summary: |
   How to use the "csv-tables" macro to get Markdown-like table syntax in Sphinx
-draft: true
 tags:
 - sphinx
 - documentation
