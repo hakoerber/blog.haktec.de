@@ -11,7 +11,7 @@ pipeline:
   #       exclude: staging
 
   build_staging:
-    image: registry.haktec.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
+    image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
     commands:
       - /app/bin/hugo --baseURL https://staging.blog.haktec.de/ --buildDrafts --ignoreCache
     when:
@@ -19,7 +19,7 @@ pipeline:
         - staging
 
   package:
-    image: registry.haktec.de/docker:636402f9f2ddd0e29f31fd1369ad69a38cb72fef
+    image: registry.hkoerber.de/docker:636402f9f2ddd0e29f31fd1369ad69a38cb72fef
     environment:
       TARGET: production
     commands:
@@ -34,7 +34,7 @@ pipeline:
     kubernetes_server: ${KUBERNETES_SERVER}
     # kubernetes_cert: ${KUBERNETES_CERT}
     kubernetes_token: ${KUBERNETES_TOKEN}
-    repo: registry.haktec.de/blog
+    repo: registry.hkoerber.de/blog
     container: blog
     tag: ${DRONE_COMMIT_SHA}
     namespace: default

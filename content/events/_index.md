@@ -11,4 +11,4 @@ title: Events
 weight: 3
 ---
 
-Here are events I attended.
+Here are events I attended:

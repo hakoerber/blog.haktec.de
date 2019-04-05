@@ -1,4 +1,4 @@
-REGISTRY := registry.haktec.de
+REGISTRY := registry.hkoerber.de
 APPNAME := blog
 PUSHURL := $(REGISTRY)/$(APPNAME)
 

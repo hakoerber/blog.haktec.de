@@ -1,9 +1,9 @@
 ---
-title: "Prometheus: Unifying Infrastructure and Application Monitoring"
-date: 2018-11-01
+title: "Kubernetes Deep Dive"
+date: 2018-05-08
 tags:
-- prometheus
-- monitoring
+- kubernetes
+- container
 location: Tradebyte, Ansbach
 ---
 # About

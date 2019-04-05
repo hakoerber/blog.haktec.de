@@ -13,7 +13,7 @@
     {{ end }}
     <tbody>
       <tr>
-        {{ range $page := .Paginator.Pages }}
+        {{ range $page := (.Paginator 15).Pages }}
           {{ range $info := $.Params.infos }}
 
           {{ $key := "" }}
@@ -36,10 +36,22 @@
           {{ $link = (index $info "link") }}
           {{ end }}
 
+          {{ $datespan := false }}
+          {{ $dateto := "" }}
           {{ if (eq $type "date") }}
+
+          {{ if ne (index $page.Params "dateto") nil }}
+          {{ $datespan = true }}
+          {{ $dateto = (index $page.Params "dateto") }}
+          {{ end }}
+
           <td>
             <time class="list-time" datetime="{{- dateFormat "2006-01-02" $value -}}">
               {{- dateFormat "2006-01-02" $value -}}
+              {{- if $datespan -}}
+              <br>
+              <div class="dateto">&ndash; {{ dateFormat "2006-01-02" $dateto -}}</div>
+              {{ end }}
             </time>
           </td>
           {{ else }}
@@ -58,4 +70,5 @@
       {{ end }}
     </tbody>
   </table>
+  {{ template "_internal/pagination.html" . }}
 </div>

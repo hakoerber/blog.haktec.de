@@ -1,8 +1,8 @@
 ---
-title: /dev/night 22
-date: 2018-01-01
-location: Tradebyte Software GmbH Ansbach
-link: false
+title: "/dev/night #22"
+date: 2018-05-08
+location: Tradebyte, Ansbach
+titlecase: false
 ---
 
-About kubernetes
+Here I gave a [talk about Kubernetes]({{< ref "talks/kubernetes-deep-dive.md" >}}) together with Vladislav Kuzntsov

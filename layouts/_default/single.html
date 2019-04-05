@@ -2,7 +2,11 @@
   <article class="article">
     <div class="content-prefix">
       <h1 class="heading">
+        {{ if (default true (.Params.titlecase)) }}
         {{- title .Title -}}
+        {{ else }}
+        {{- .Title -}}
+        {{ end }}
       </h1>
       <time class="date" datetime="{{- .Date.Format "2006-01-02" -}}">
         {{- .Date.Format "2006-01-02" -}}
