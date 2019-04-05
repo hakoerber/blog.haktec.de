@@ -4,7 +4,7 @@ infos:
   type: date
 - name: event
   key: title
-  link: true
+  defaultlink: true
 - name: location
 menu: main
 title: Events
