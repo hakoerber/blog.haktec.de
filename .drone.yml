@@ -62,20 +62,20 @@ pipeline:
       # - KUBERNETES_CERT
       - KUBERNETES_TOKEN
 
-  # deploy:
-  #   image: quay.io/honestbee/drone-kubernetes:master
-  #   deployment: de-haktec-blog
-  #   kubernetes_server: ${KUBERNETES_SERVER}
-  #   # kubernetes_cert: ${KUBERNETES_CERT}
-  #   kubernetes_token: ${KUBERNETES_TOKEN}
-  #   repo: registry.haktec.de/blog
-  #   container: blog
-  #   tag: ${DRONE_COMMIT_SHA}
-  #   namespace: default
-  #   when:
-  #     branch:
-  #       - master
-  #   secrets:
-  #     - KUBERNETES_SERVER
-  #     # - KUBERNETES_CERT
-  #     - KUBERNETES_TOKEN
+  deploy:
+    image: quay.io/honestbee/drone-kubernetes:master
+    deployment: de-haktec-blog
+    kubernetes_server: ${KUBERNETES_SERVER}
+    # kubernetes_cert: ${KUBERNETES_CERT}
+    kubernetes_token: ${KUBERNETES_TOKEN}
+    repo: registry.hkoerber.de/blog
+    container: blog
+    tag: ${DRONE_COMMIT_SHA}
+    namespace: default
+    when:
+      branch:
+        - master
+    secrets:
+      - KUBERNETES_SERVER
+      # - KUBERNETES_CERT
+      - KUBERNETES_TOKEN
