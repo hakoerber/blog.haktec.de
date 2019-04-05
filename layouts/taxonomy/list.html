@@ -1,0 +1,5 @@
+{{ define "main" }}
+<h1>Here are all entries with the {{ title .Data.Singular }} "{{ .Title }}"</h1>
+  {{- partial "pagelist-default.html" . -}}
+  <a href={{ printf "/%s" .Data.Plural }}>List of all {{ .Data.Plural }}</a>
+{{ end }}

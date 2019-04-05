@@ -1,0 +1,36 @@
+{{ define "main" }}
+  <article class="article">
+    <div class="content-prefix">
+      <h1 class="heading">
+        {{ if (default true (.Params.titlecase)) }}
+        {{- title .Title -}}
+        {{ else }}
+        {{- .Title -}}
+        {{ end }}
+      </h1>
+      <time class="date" datetime="{{- .Date.Format "2006-01-02" -}}">
+        {{- .Date.Format "2006-01-02" -}}
+      </time>
+    </div>
+
+    <div class="content item">
+      {{- .Content -}}
+      <div class="content-postfix">
+        {{- partial "taglist.html" . -}}
+      </div>
+      {{- partial "related.html" . -}}
+    </div>
+
+    {{- if .Params.toc -}}
+    <div id="toc" class="item">
+    <aside>
+      <h3>Content</h3>
+      <div class="toc-content">
+        {{ .TableOfContents }}
+      </div>
+    </aside>
+    </div>
+    {{- end -}}
+
+  </article>
+{{ end }}

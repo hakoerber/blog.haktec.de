@@ -1,0 +1,9 @@
+<div class="social">
+  <ul class="list-horizontal">
+    {{ range $social := .Site.Params.social }}
+      <li class="list-horizontal-item">
+        <a href="{{ $social.link }}" class="{{ $social.style }} {{ $social.icon }}" title="{{ $social.description | default (printf "Me on %s" $social.name|title) }}"></a>
+      </li>
+    {{ end }}
+  </ul>
+</div>
