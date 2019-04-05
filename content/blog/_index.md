@@ -4,5 +4,5 @@ infos:
 - name: date
   type: date
 - name: title
-  link: true
+  defaultlink: true
 ---
