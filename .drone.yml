@@ -13,10 +13,26 @@ pipeline:
   build_staging:
     image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
     commands:
-      - /app/bin/hugo --baseURL https://staging.blog.haktec.de/ --buildDrafts --ignoreCache
+      - /app/bin/hugo
+        --baseURL https://staging.blog.hkoerber.de/
+        --buildDrafts
+        --buildFuture
+        --ignoreCache
     when:
       branch:
-        - staging
+        include: "*"
+        exclude: master
+
+  build_production:
+    image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
+    commands:
+      - /app/bin/hugo
+        --baseURL https://staging.blog.hkoerber.de/
+        --minify
+        --ignoreCache
+    when:
+      branch:
+        - master
 
   package:
     image: registry.hkoerber.de/docker:636402f9f2ddd0e29f31fd1369ad69a38cb72fef
