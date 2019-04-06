@@ -1,5 +1,5 @@
 ---
-title: This is an overview over all posts
+title: Blog
 infos:
 - name: date
   type: date
