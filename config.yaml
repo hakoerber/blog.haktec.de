@@ -39,7 +39,7 @@ params:
       icon: fa-gitlab
       style: fab
     - name: linkedin
-      link: https://www.linkedin.com/in/hannes-k%C3%B6rber-479ab5122
+      link: https://www.linkedin.com/in/hannes-koerber
       icon: fa-linkedin
       style: fab
     - name: xing
