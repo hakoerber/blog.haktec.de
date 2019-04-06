@@ -1,7 +1,7 @@
 ---
 title: "/dev/night #28"
 date: 2018-10-16
-location: Hetzer, Gunzenhausen
+location: Hetzner, Gunzenhausen
 titlecase: false
 ---
 
