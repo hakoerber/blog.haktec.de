@@ -52,14 +52,12 @@ i/* http://meyerweb.com/eric/tools/css/reset/
 }
 
 body {
-    /* border: black; */
-    /* border-style: solid; */
-    /* border-width: 2px; */
     margin: 0;
     font-size: 12pt;
     font-family: sans;
     display: flex;
     flex-direction: column;
+    background-color: #f4f4f4; /* paper */
 }
 
 html, body {
@@ -107,10 +105,15 @@ code {
 
 pre {
     display: block;
-    font-family: monospace;
     white-space: pre;
     margin: 20px 10px;
-    background-color: lightgray;
+}
+
+pre,
+.content :not(pre) > code {
+    font-family: monospace;
+    /* chroma class does its own styling */
+    background-color: #e5e5e5 !important;
     overflow: auto;
 }
 
@@ -126,7 +129,10 @@ pre {
     padding-top: 15px;
     padding-bottom: 15px;0
     overflow: auto;
-    background-color: #67001a;
+    background-color: firebrick;
+    background-color: #a9a9a9;
+    /* background-color: #722f37; /1* wine *1/ */
+    /* background-color: #373737; */
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -140,37 +146,23 @@ ul {
 
 /* LINK STYLING */
 
-.content a {
-    /* font-weight: bold; */
-    /* background-color: lightgray; */
-}
-
 a:link {
-    /* border-bottom: thin solid; */
-
-    text-decoration: underline;
-    color: #67001a;
+    text-decoration: none;
 }
 
 a:visited {
-    color: black;
 }
-
 
 /* http://www.outlinenone.com/ */
 a:hover, a:focus {
     text-decoration: underline;
-    /* background-color: lightgray; */
-    /* color: black; */
 }
 
 a:hover {
-    color: #67001a;
-    /* color: #ff9500; */
+    text-decoration: underline;
 }
 
 a:active {
-    color: #ccc
 }
 
 .header a,
@@ -179,16 +171,17 @@ a:active {
 #toc a:link,
 #toc a:visited {
     color: black;
-    text-decoration: none;
 }
 
 .header a:hover,
 .footer a:hover,
-.tags a:hover,
-#toc a:hover {
-    /* color: dimgray; */
+.tags a:hover {
+    color: #404040;
     text-decoration: underline;
-    color: #800020;
+}
+
+.social a:hover {
+    text-decoration: none;
 }
 
 .tags ul {
@@ -266,8 +259,6 @@ a:active {
     margin-right: 20px;
     padding-left: 10px;
     padding-right: 10px;
-    font-variant: small-caps;
-    /* text-transform: uppercase; */
 }
 
 .social .list-horizontal-item:not(:last-child) {
@@ -275,24 +266,21 @@ a:active {
 }
 
 .social {
-    /* border: grey; */
-    /* bor der-style: solid  */
-    /* bord er-width: 2px; */
     font-size: 18px;
     margin-right: 10px;
 }
 
 #title {
-    /* border: blue; */
-    /* border-style: solid; */
-    /* border-width: 2px; */
-    font-size: 28px;
-    font-variant: small-caps;
-    /* text-transform: uppercase; */
+    font-size: 24px;
 
     margin-right: auto;
-    /* font-variant: small-caps; */
     margin-left: 15px;
+}
+
+#title, .navigation li {
+    font-variant: small-caps;
+    /* text-transform: uppercase; */
+    /* font-family: monospace; */
 }
 
 #copyright {
@@ -300,17 +288,9 @@ a:active {
     margin-left: 10px;
 }
 
-#copyright a {
-    color: white;
-}
-
-#title, #copyright {
-    color: white;
-}
-
 main {
     text-align: justify;
-    margin: auto;
+    margin-bottom: auto;
 }
 
 .footnotes {
@@ -364,11 +344,6 @@ main {
     margin-bottom: 25px;
 }
 
-
-.content :not(pre) > code {
-    font-family: monospace;
-    background-color: lightgray;
-}
 
 .content table {
     border: #ddd;
@@ -632,9 +607,6 @@ main {
     margin-top: 50px;
     text-align: initial;
     align-self: start;
-    /* border: black; */
-    /* border-style: solid; */
-    /* border-width: 2px; */
     grid-column: 3 / span 1;
     grid-row: 2 / span 1;
     border-left: 1px solid gray;
