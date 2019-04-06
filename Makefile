@@ -36,5 +36,13 @@ develop:
 	bundle exec jekyll serve . --incremental
 
 .PHONY: preview
-preview: build
-	(cd ./_site/ && python3 -m http.server)
+preview: assets
+	docker run \
+		--rm \
+		--net host \
+		-v $(PWD):/workdir \
+		-w /workdir \
+		registry.haktec.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884 \
+		/app/bin/hugo serve \
+			--watch \
+			--buildDrafts
