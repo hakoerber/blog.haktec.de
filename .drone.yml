@@ -27,7 +27,7 @@ pipeline:
     image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
     commands:
       - /app/bin/hugo
-        --baseURL https://staging.blog.hkoerber.de/
+        --baseURL https://blog.hkoerber.de/
         --minify
         --ignoreCache
     when:
