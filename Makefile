@@ -2,10 +2,18 @@ REGISTRY := registry.hkoerber.de
 APPNAME := blog
 PUSHURL := $(REGISTRY)/$(APPNAME)
 
-BUILD_CONTAINER := $(REGISTRY)/jekyll
+RESUME := static/assets/resume/resume.pdf
 
 .PHONY: all
 all: | build image image-push
+
+.PHONY: resume
+resume:
+	(cd contrib/resume && $(MAKE) pdf)
+	cp contrib/resume/resume.pdf $(RESUME)
+
+.PHONY: assets
+assets: resume
 
 .PHONY: build
 build:
