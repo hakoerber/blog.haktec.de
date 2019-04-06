@@ -7,4 +7,4 @@ titlecase: false
 
 Topic: Quintet - WebWeek Special
 
-I gave a [talk about unifying application and infrastructure monitoring with Prometheus]({{< ref "talks/prometheus-unifying-infrastructure-application-monitoring.md" >}})
+I gave a [talk about unifying application and infrastructure monitoring with Prometheus]({{< ref "/talks/prometheus-unifying-infrastructure-application-monitoring.md" >}})
