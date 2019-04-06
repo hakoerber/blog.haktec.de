@@ -32,20 +32,6 @@
         {{ end }}
         {{ template "_internal/pagination.html" . }}
       </ul>
-
-
-      <div class="sitemap">
-        <h3>Sitemap</h3>
-        <ul>
-          {{ range .Site.Menus.main }}
-          <li>
-            <a href="{{ .URL }}" title="{{ .Name }}">
-              {{ .Name }}
-            </a>
-          </li>
-          {{ end }}
-        </ul>
-      </div>
     </div>
   </article>
 {{ end }}
