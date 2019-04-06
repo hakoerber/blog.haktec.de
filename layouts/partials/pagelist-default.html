@@ -41,7 +41,6 @@
             {{ if ne (index $page.Params "links") nil }}
               {{ if ne (index $page.Params.links $key) nil }}
                 {{ $link = default $link (index (index $page.Params.links $key) "enable") }}
-                {{ $link }}
               {{ end }}
             {{ end }}
 
@@ -56,8 +55,6 @@
             {{ if and ($link) (eq $linktarget "") }}
               {{ $linktarget = $page.URL }}
             {{ end }}
-
-
 
             {{ $externallink := "" }}
             {{ if ne (index $page.Params "externallink") nil }}
