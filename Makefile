@@ -42,7 +42,7 @@ preview: assets
 		--net host \
 		-v $(PWD):/workdir \
 		-w /workdir \
-		registry.haktec.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884 \
+		registry.hkoerber.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884 \
 		/app/bin/hugo serve \
 			--watch \
 			--buildDrafts

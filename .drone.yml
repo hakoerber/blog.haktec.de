@@ -1,6 +1,6 @@
 pipeline:
   # build:
-  #   image: registry.haktec.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
+  #   image: registry.hkoerber.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
   #   environment:
   #     TARGET: production
   #   commands:
@@ -46,7 +46,7 @@ pipeline:
 
   deploy:
     image: quay.io/honestbee/drone-kubernetes:master
-    deployment: de-haktec-blog-staging
+    deployment: de-hkoerber-blog-staging
     kubernetes_server: ${KUBERNETES_SERVER}
     # kubernetes_cert: ${KUBERNETES_CERT}
     kubernetes_token: ${KUBERNETES_TOKEN}
@@ -64,7 +64,7 @@ pipeline:
 
   deploy:
     image: quay.io/honestbee/drone-kubernetes:master
-    deployment: de-haktec-blog
+    deployment: de-hkoerber-blog
     kubernetes_server: ${KUBERNETES_SERVER}
     # kubernetes_cert: ${KUBERNETES_CERT}
     kubernetes_token: ${KUBERNETES_TOKEN}
