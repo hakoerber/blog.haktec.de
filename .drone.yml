@@ -1,81 +1,65 @@
-pipeline:
-  # build:
-  #   image: registry.hkoerber.de/jekyll:86e0546618060dc5c7d00ff66ce218022768d4a0
-  #   environment:
-  #     TARGET: production
-  #   commands:
-  #     - make build
-  #   when:
-  #     branch:
-  #       include: "*"
-  #       exclude: staging
+kind: pipeline
+type: kubernetes
+name: release
+steps:
+- name: submodules
+  image: alpine/git
+  commands:
+  - git submodule update --recursive --remote --init
 
-  build_staging:
-    image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
-    commands:
-      - /app/bin/hugo
-        --baseURL https://staging.blog.hkoerber.de/
-        --buildDrafts
-        --buildFuture
-        --ignoreCache
-    when:
-      branch:
-        include: "*"
-        exclude: master
+- name: resume
+  image: registry.hkoerber.de/latex:latest
+  commands:
+  - cd contrib/resume
+  - pdflatex -halt-on-error -output-format pdf -interaction errorstopmode -draftmode resume.tex
+  - pdflatex -halt-on-error -output-format pdf -interaction errorstopmode -draftmode resume.tex
+  - pdflatex -halt-on-error -output-format pdf -interaction errorstopmode resume.tex
 
-  build_production:
-    image: registry.hkoerber.de/hugo:04d0d7f0967508c9efe5678f96b90dc21a7d958b
-    commands:
-      - /app/bin/hugo
-        --baseURL https://blog.hkoerber.de/
-        --minify
-        --ignoreCache
-    when:
-      branch:
-        - master
+- name: resume-html
+  image: registry.hkoerber.de/pdf2htmlex:latest
+  commands:
+  - cd contrib/resume
+  - >-
+    pdf2htmlEX
+    --fit-width 1024
+    --embed cfijo
+    --dest-dir html-out
+    --embed-external-font 1
+    resume.pdf
+    index.html
 
-  package:
-    image: registry.hkoerber.de/docker:636402f9f2ddd0e29f31fd1369ad69a38cb72fef
-    environment:
-      TARGET: production
-    commands:
-      - make image
-      - make push
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+- name: gather-assets
+  image: alpine
+  commands:
+  - cp contrib/resume/resume.pdf static/assets/resume/Hannes_Koerber_Resume.pdf
+  - cp -r contrib/resume/html-out static/assets/resume-html
 
-  deploy:
-    image: quay.io/honestbee/drone-kubernetes:master
-    deployment: de-hkoerber-blog-staging
-    kubernetes_server: ${KUBERNETES_SERVER}
-    # kubernetes_cert: ${KUBERNETES_CERT}
-    kubernetes_token: ${KUBERNETES_TOKEN}
-    repo: registry.hkoerber.de/blog
-    container: blog
-    tag: ${DRONE_COMMIT_SHA}
-    namespace: default
-    when:
-      branch:
-        - staging
-    secrets:
-      - KUBERNETES_SERVER
-      # - KUBERNETES_CERT
-      - KUBERNETES_TOKEN
+- name: build
+  image: registry.hkoerber.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884
+  commands:
+  - >-
+    /app/bin/hugo
+    --baseURL=https://blog.hkoerber.de/
+    --cleanDestinationDir
+    --minify
+    --destination ./public/
+  - chmod -R o+rX ./public/
 
-  deploy:
-    image: quay.io/honestbee/drone-kubernetes:master
-    deployment: de-hkoerber-blog
-    kubernetes_server: ${KUBERNETES_SERVER}
-    # kubernetes_cert: ${KUBERNETES_CERT}
-    kubernetes_token: ${KUBERNETES_TOKEN}
-    repo: registry.hkoerber.de/blog
-    container: blog
-    tag: ${DRONE_COMMIT_SHA}
-    namespace: default
-    when:
-      branch:
-        - master
-    secrets:
-      - KUBERNETES_SERVER
-      # - KUBERNETES_CERT
-      - KUBERNETES_TOKEN
+- name: image
+  image: registry.hkoerber.de/drone-kaniko:latest
+  settings:
+    dockerfile: Dockerfile.nginx
+    registry: registry.hkoerber.de
+    repo: blog
+    tags:
+    - ${DRONE_COMMIT_SHA}
+
+- name: update k8s
+  image: alpine/git
+  commands:
+  - git clone https://code.hkoerber.de/hkoerber/mycloud mycloud
+  - cd mycloud/k8s/blog
+  - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}#' 50-deployment.yaml"
+  - git add 50-deployment.yaml
+  - "git commit -m 'k8s: Update blog container image'"
+  - git push origin master
