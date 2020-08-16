@@ -60,6 +60,9 @@ steps:
   - git clone https://code.hkoerber.de/hkoerber/mycloud mycloud
   - cd mycloud/k8s/blog
   - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}#' 50-deployment.yaml"
+  # Check if file actually changed, we're done if it did not. Most likely a
+  # pipeline re-run
+  - git diff --exit-code --quiet -- 50-deployment.yaml && exit 0 || true
   - git add 50-deployment.yaml
   - "git commit -m 'k8s: Update blog container image'"
   - git push origin master
