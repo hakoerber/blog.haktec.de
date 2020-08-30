@@ -293,6 +293,10 @@ main {
     margin-bottom: auto;
 }
 
+ul {
+    text-align: left;
+}
+
 .footnotes {
     margin-top: 45px;
     text-align: left;
@@ -530,7 +534,10 @@ main {
 .articles-list .post-date {
     float: left;
     /* font-style: oblique; */
+}
 
+.date {
+    float: right;
 }
 
 .articles-list .post-summary {
@@ -583,7 +590,7 @@ main {
 .article {
     display: grid;
     /* grid-template-columns: left 25% center 50% right 25%; */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
     grid-template-rows: 1fr auto;
 }
 
@@ -601,7 +608,13 @@ main {
     text-align: center;
     grid-column: 2 / span 1;
     grid-row: 1 / span 1;
+    margin-bottom: 30px;
 }
+
+.heading {
+    margin-bottom: 30px;
+}
+
 
 #toc {
     margin-top: 50px;
