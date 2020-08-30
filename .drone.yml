@@ -103,7 +103,7 @@ steps:
     branch:
     - master
   commands:
-  - git clone https://code.hkoerber.de/hkoerber/mycloud mycloud
+  - git clone https://code.hkoerber.de/hannes/mycloud mycloud
   - cd mycloud/k8s/blog
   - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}#' 50-deployment.yaml"
   # Check if file actually changed, we're done if it did not. Most likely a
@@ -122,7 +122,7 @@ steps:
     branch:
     - develop
   commands:
-  - git clone https://code.hkoerber.de/hkoerber/mycloud mycloud
+  - git clone https://code.hkoerber.de/hannes/mycloud mycloud
   - cd mycloud/k8s/blog-preview
   - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}-preview#' 50-deployment.yaml"
   # Check if file actually changed, we're done if it did not. Most likely a
