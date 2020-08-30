@@ -5,11 +5,6 @@ trigger:
   branch:
   - master
   - develop
-environment:
-  GIT_AUTHOR_NAME: &git_name
-  GIT_AUTHOR_EMAIL:  &git_mail
-  GIT_COMMITTER_NAME: *git_name
-  GIT_COMMITTER_EMAIL: *git_mail
 steps:
 - name: submodules
   image: alpine/git
@@ -103,6 +98,13 @@ steps:
     branch:
     - master
   commands:
+  # the explicit setting of the env variables is required because drone does
+  # not "export" the environment variables set with "environment:", they are
+  # only usable inside the scripts.
+  - export GIT_AUTHOR_NAME="Drone"
+  - export GIT_AUTHOR_EMAIL="drone@hkoerber.de"
+  - export GIT_COMMITTER_NAME="$$GIT_AUTHOR_NAME"
+  - export GIT_COMMITTER_EMAIL="$$GIT_AUTHOR_EMAIL"
   - git clone https://code.hkoerber.de/hannes/mycloud mycloud
   - cd mycloud/k8s/blog
   - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}#' 50-deployment.yaml"
@@ -122,6 +124,13 @@ steps:
     branch:
     - develop
   commands:
+  # the explicit setting of the env variables is required because drone does
+  # not "export" the environment variables set with "environment:", they are
+  # only usable inside the scripts.
+  - export GIT_AUTHOR_NAME="Drone"
+  - export GIT_AUTHOR_EMAIL="drone@hkoerber.de"
+  - export GIT_COMMITTER_NAME="$$GIT_AUTHOR_NAME"
+  - export GIT_COMMITTER_EMAIL="$$GIT_AUTHOR_EMAIL"
   - git clone https://code.hkoerber.de/hannes/mycloud mycloud
   - cd mycloud/k8s/blog-preview
   - "sed -i 's#image: registry.hkoerber.de/blog:.*$#image: registry.hkoerber.de/blog:${DRONE_COMMIT_SHA}-preview#' 50-deployment.yaml"
