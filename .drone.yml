@@ -19,7 +19,7 @@ steps:
   - pdflatex -halt-on-error -output-format pdf -interaction errorstopmode resume.tex
 
 - name: resume-html
-  image: registry.hkoerber.de/pdf2htmlex:latest
+  image: registry.hkoerber.de/pdf2htmlex:65507e872f79c29dfde25f83d3f0666617ee1c5f
   commands:
   - cd contrib/resume
   - >-
