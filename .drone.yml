@@ -12,7 +12,7 @@ steps:
   - git submodule update --recursive --remote --init
 
 - name: resume
-  image: registry.hkoerber.de/latex:latest
+  image: registry.hkoerber.de/latex:eeb99822662d55f870bd99e2b52c0c8f7a2f4615
   commands:
   - cd contrib/resume
   - pdflatex -halt-on-error -output-format pdf -interaction errorstopmode -draftmode resume.tex
