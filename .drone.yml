@@ -42,7 +42,7 @@ steps:
   when:
     branch:
     - master
-  image: registry.hkoerber.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884
+  image: registry.hkoerber.de/hugo:f000054616d7789202b06872a6535bcb9fd500c9
   commands:
   - >-
     /app/bin/hugo
@@ -53,7 +53,7 @@ steps:
   - chmod -R o+rX ./public/
 
 - name: preview:build
-  image: registry.hkoerber.de/hugo:f216de6b127620641bcaf1d28fe16bf1ea2db884
+  image: registry.hkoerber.de/hugo:f000054616d7789202b06872a6535bcb9fd500c9
   when:
     branch:
     - develop
