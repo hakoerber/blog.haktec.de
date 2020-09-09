@@ -4,7 +4,7 @@
       {{ .Content }}
 
       <ul class="articles-list">
-        {{ range (.Paginate (where .Pages "Type" "blog") 5).Pages }}
+        {{ range (.Paginate (where .Site.RegularPages "Type" "blog") 10).Pages }}
         <li class="post">
           <div class="post-title"><a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a></div>
 

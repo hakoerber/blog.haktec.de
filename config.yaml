@@ -9,6 +9,11 @@ pygmentsCodefences: true
 pygmentsUseClasses: true
 MetaDataFormat: yaml
 
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
 taxonomies:
   tag: tags
   category: categories
