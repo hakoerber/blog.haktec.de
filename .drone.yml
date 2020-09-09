@@ -92,7 +92,7 @@ steps:
     tags:
     - ${DRONE_COMMIT_SHA}-preview
 
-- name: update k8s
+- name: production:update k8s
   image: alpine/git
   when:
     branch:
@@ -114,7 +114,7 @@ steps:
   - git add 50-deployment.yaml
   - >-
     git commit
-    -m 'k8s: Update blog preview container image'
+    -m 'k8s: Update blog container image'
     -m "Triggered in repo $DRONE_REPO by commit $DRONE_COMMIT"
   - git push origin master
 
