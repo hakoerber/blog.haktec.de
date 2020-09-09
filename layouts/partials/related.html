@@ -2,11 +2,11 @@
 
 {{ if gt (len $related) 0 }}
 {{ with $related }}
-<div class="seealso">
+<div class="content">
   <h3>See also</h3>
   <ul>
     {{ range . }}
-    <li >
+    <li>
       <a href="{{ .RelPermalink }}">
         {{- .Title -}}
       </a>

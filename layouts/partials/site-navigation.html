@@ -1,11 +1,9 @@
-<nav class="navigation" role="navigation">
-  <ul class="list-horizontal">
-    {{ range .Site.Menus.main }}
-    <li class="list-horizontal-item">
-      <a href="{{ .URL }}" title="{{ .Name }}">
-        {{ .Name }}
-      </a>
-    </li>
-    {{ end }}
-  </ul>
-</nav>
+<div class="buttons">
+  {{ range .Site.Menus.main }}
+  <div class="navbar-item">
+    <a href="{{ .URL }}" title="{{ .Name }}" class="button is-light is-size-5" style="font-variant: small-caps;">
+      {{ .Name }}
+    </a>
+  </div>
+  {{ end }}
+</div>

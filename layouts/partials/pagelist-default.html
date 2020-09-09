@@ -1,5 +1,5 @@
-<div class="pagelist">
-  <table>
+<div class="content">
+  <table class="table is-striped is-hoverable is-bordered">
     {{ if isset .Params "infos" }}
       {{ if gt (len .Params.infos) 1 }}
         <thead>
@@ -96,5 +96,5 @@
       {{ end }}
     </tbody>
   </table>
-  {{ template "_internal/pagination.html" . }}
 </div>
+{{ template "_internal/pagination.html" . }}

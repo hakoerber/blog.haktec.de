@@ -1,12 +1,5 @@
-{{ if ne .Params.tags nil }}
-  <div class="tags">
-    <h3>Tags</h3>
-    <ul class="tags">
-    {{ range .Params.tags }}
-      <li>
-        <a href="{{ "/tags/" }}{{ . | urlize }}"> {{ title . }} </a>
-      </li>
-    {{ end }}
-    </ul>
-  </div>
-{{ end }}
+<div class="tags">
+  {{ range .Params.tags }}
+  <span class="tag is-medium"><a href="{{ "/tags/" }}{{ . | urlize }}"> {{ title . }} </a></span>
+  {{ end }}
+</div>
