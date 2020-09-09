@@ -45,7 +45,7 @@ steps:
   image: registry.hkoerber.de/hugo:f000054616d7789202b06872a6535bcb9fd500c9
   commands:
   - >-
-    /app/bin/hugo
+    hugo
     --baseURL=https://blog.hkoerber.de/
     --cleanDestinationDir
     --minify
@@ -59,7 +59,7 @@ steps:
     - develop
   commands:
   - >-
-    /app/bin/hugo
+    hugo
     --baseURL=https://preview.blog.hkoerber.de/
     --cleanDestinationDir
     --minify
