@@ -53,7 +53,7 @@
 
             {{/* fall back to default target if none given */}}
             {{ if and ($link) (eq $linktarget "") }}
-              {{ $linktarget = $page.URL }}
+              {{ $linktarget = $page.Permalink }}
             {{ end }}
 
             {{ $externallink := "" }}

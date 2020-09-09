@@ -15,7 +15,7 @@
     <title>{{ .Site.Title }}</title>
     {{ end }}
 
-    {{ .Hugo.Generator }}
+    {{ hugo.Generator }}
 
     {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production")  }}
       <meta name="robots" content="all">
